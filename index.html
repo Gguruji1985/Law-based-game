@@ -310,143 +310,222 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
 
 <!-- KEY SCREEN -->
 <div id="screen-key" class="screen active">
-  <div style="text-align:center;margin-bottom:2rem;">
+  <div style="text-align:center;margin-bottom:1.8rem;">
     <div class="logo">⚖ COURT</div>
     <div class="logo-sub">Legal Battle Simulator</div>
   </div>
-  <div class="card">
+  <div class="card" style="max-width:500px;">
     <div class="card-title">Choose Your AI Provider</div>
-    <p class="card-desc">Select a provider and enter your API key. Keys are used client-side only and never stored.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1.2rem;">
+    <p class="card-desc">Select a provider and enter your API key. Stored locally, never shared.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
       <button class="provider-tab active" id="tab-anthropic" onclick="selectProvider('anthropic')">🟠 Anthropic</button>
       <button class="provider-tab" id="tab-openai" onclick="selectProvider('openai')">🟢 OpenAI</button>
       <button class="provider-tab" id="tab-gemini" onclick="selectProvider('gemini')">🔵 Gemini</button>
       <button class="provider-tab" id="tab-groq" onclick="selectProvider('groq')">⚡ Groq (Free)</button>
     </div>
-    <div id="provider-info" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.8rem;line-height:1.6;">
-      <div id="provider-model" style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;margin-bottom:0.2rem;"></div>
+    <div id="provider-info" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.7rem 0.9rem;margin-bottom:0.9rem;font-size:0.78rem;line-height:1.6;">
+      <div id="provider-model" style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.66rem;font-weight:700;margin-bottom:0.15rem;"></div>
       <div id="provider-link" style="color:var(--muted);"></div>
     </div>
-    <div class="key-row">
-      <input type="password" id="api-key-input" placeholder="sk-ant-..." onkeydown="if(event.key==='Enter')setKey()"/>
-      <button class="btn" style="width:auto;padding:0 1.2rem;" onclick="setKey()">Enter →</button>
+    <div class="key-row" style="margin-bottom:0.5rem;">
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." onkeydown="if(event.key==='Enter')setKeyAndTutorial()"/>
+    </div>
+    <label style="font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;cursor:pointer;margin-bottom:1.3rem;">
+      <input type="checkbox" id="save-key-cb" style="width:auto;margin:0;"> Remember key in this browser
+    </label>
+    <!-- Save restore -->
+    <div style="margin-bottom:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.8rem 0.9rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--gold);font-weight:700;margin-bottom:0.5rem;">📂 Restore Previous Save</div>
+      <div style="display:flex;gap:0.4rem;margin-bottom:0.4rem;">
+        <input type="text" id="key-code-input" placeholder="Paste COURT-XXXX save code..." style="flex:1;margin-bottom:0;font-size:0.7rem;padding:0.4rem 0.65rem;">
+        <button onclick="applyKeyCodeInput()" style="background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:0.4rem 0.8rem;font-family:serif;font-weight:700;cursor:pointer;font-size:0.78rem;white-space:nowrap;">Load →</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.72rem;color:var(--muted);flex:1;">Or import a .json file:</span>
+        <button onclick="document.getElementById('key-import-file').click()" style="background:var(--bg4);border:1px solid var(--border2);border-radius:5px;padding:0.25rem 0.65rem;color:var(--muted2);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.6rem;font-weight:700;">⬆ File</button>
+        <input type="file" id="key-import-file" accept=".json" style="display:none;" onchange="importSaveAtKey(event)">
+      </div>
+      <div id="key-import-status" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--green);margin-top:0.4rem;display:none;"></div>
+    </div>
+    <!-- Entry path -->
+    <div style="border-top:1px solid var(--border);padding-top:1.1rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.7rem;text-align:center;">Choose Your Entry Path</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+        <button onclick="setKeyAndExam()" style="background:var(--bg4);border:2px solid var(--gold);border-radius:10px;padding:1rem 0.8rem;cursor:pointer;text-align:center;transition:background 0.2s;" onmouseover="this.style.background='#1a1530'" onmouseout="this.style.background='var(--bg4)'">
+          <div style="font-size:1.5rem;margin-bottom:0.3rem;">📜</div>
+          <div style="font-family:serif;color:var(--gold);font-size:0.9rem;font-weight:700;margin-bottom:0.2rem;">Bar Exam</div>
+          <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;">Prove your knowledge. Earn bonus points &amp; your admission certificate.</div>
+        </button>
+        <button onclick="setKeyAndTutorial()" style="background:var(--bg4);border:2px solid var(--border2);border-radius:10px;padding:1rem 0.8rem;cursor:pointer;text-align:center;transition:background 0.2s;" onmouseover="this.style.background='#1a1530'" onmouseout="this.style.background='var(--bg4)'">
+          <div style="font-size:1.5rem;margin-bottom:0.3rem;">🎓</div>
+          <div style="font-family:serif;color:var(--text);font-size:0.9rem;font-weight:700;margin-bottom:0.2rem;">Jump Straight In</div>
+          <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;">Guided tutorial. Learn as you go. No pressure, no exam.</div>
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- LANDING SCREEN -->
 <div id="screen-landing" class="screen">
-  <div class="landing-header">
-    <div class="landing-header-center">
-      <div class="logo" style="font-size:3rem;">⚖ COURT</div>
-      <div class="logo-sub">Legal Battle Simulator</div>
+  <div class="menu-topbar">
+    <div style="display:flex;align-items:center;">
+      <div class="menu-logo">⚖ COURT</div>
+      <div class="menu-logo-sub">Legal Battle Simulator</div>
     </div>
-    <div class="profile-card">
-      <div style="font-family:'Playfair Display',serif;color:var(--gold);font-weight:700;margin-bottom:0.6rem;font-size:0.9rem;">⚖ Lawyer Profile</div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="color:var(--muted);font-size:0.75rem;">Score</span><span id="prof-score" style="color:var(--gold-light);font-weight:600;">0 pts</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="color:var(--muted);font-size:0.75rem;">Tier</span><span id="prof-tier" style="color:var(--green);font-weight:700;">Standard</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="color:var(--muted);font-size:0.75rem;">W/L</span><span id="prof-wl" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text);">0 / 0</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span style="color:var(--muted);font-size:0.75rem;">XP</span><span id="prof-xp" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--purple);">0 / 100</span></div>
-      <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
-      <div style="margin-top:0.6rem;border-top:1px solid var(--border);padding-top:0.6rem;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted);margin-bottom:0.3rem;">SKILLS</div>
-        <div class="skill-grid" id="skill-grid"></div>
-      </div>
+    <div class="menu-tabs">
+      <button onclick="showTab('tab-play')" id="menu-tab-play" class="menu-tab active-tab">⚡ Play</button>
+      <button onclick="showTab('tab-profile')" id="menu-tab-profile" class="menu-tab">👤 Profile</button>
+      <button onclick="showTab('tab-lb')" id="menu-tab-lb" class="menu-tab">🏆 Leaderboard</button>
+      <button onclick="showSaveModal()" class="menu-tab">💾 Save</button>
     </div>
   </div>
 
-  <div class="settings-row">
-    <div class="settings-box">
-      <div class="settings-label">⚖ Jurisdiction</div>
-      <select id="sel-jurisdiction">
-        <option value="US">🇺🇸 United States</option><option value="UK">🇬🇧 United Kingdom</option>
-        <option value="EU">🇪🇺 European Union</option><option value="CA">🇨🇦 Canada</option>
-        <option value="AU">🇦🇺 Australia</option><option value="IN">🇮🇳 India</option>
-        <option value="FR">🇫🇷 France</option><option value="DE">🇩🇪 Germany</option>
-        <option value="JP">🇯🇵 Japan</option><option value="SG">🇸🇬 Singapore</option>
-      </select>
-      <div class="settings-hint" id="jur-hint">US Federal & State Common Law, UCC, Constitutional Law</div>
-    </div>
-    <div class="settings-box">
-      <div class="settings-label">🌐 Language</div>
-      <select id="sel-language">
-        <option value="en">English</option><option value="fr">French</option>
-        <option value="de">German</option><option value="es">Spanish</option>
-        <option value="ja">Japanese</option><option value="zh">Chinese</option>
-        <option value="pt">Portuguese</option><option value="ar">Arabic</option>
-        <option value="hi">Hindi</option><option value="nl">Dutch</option>
-      </select>
-      <div class="settings-hint">AI argues and rules in your chosen language</div>
-    </div>
-    <div class="settings-box">
-      <div class="settings-label">⚔ Opponent Style</div>
-      <select id="sel-opponent">
-        <option value="aggressive">😤 Aggressive Prosecutor</option>
-        <option value="slippery">🦊 Slippery Corporate Lawyer</option>
-        <option value="rookie">🎓 Rookie Who Gets Lucky</option>
-        <option value="dirty">😈 Dirty Tricks Specialist</option>
-      </select>
-      <div class="settings-hint" id="opponent-hint">Goes for the throat — no mercy, maximum pressure</div>
-    </div>
-    <div class="settings-box">
-      <div class="settings-label">⏱ Turn Timer</div>
-      <select id="sel-timer">
-        <option value="0">Off</option>
-        <option value="60">60 seconds</option>
-        <option value="90">90 seconds</option>
-        <option value="120">2 minutes</option>
-      </select>
-      <div class="settings-hint">Miss the timer and the judge rules against you</div>
-    </div>
-  </div>
-
-  <div class="main-grid">
-    <div class="diff-section">
-      <div class="section-title">⚡ Generate a Case</div>
-      <div class="section-sub" id="tier-desc">Each case is unique — AI generates full evidence, witnesses, and a hidden element before you enter.</div>
-      <button class="diff-btn" id="btn-standard" onclick="generateCase('Standard')">
-        <div><div class="diff-btn-name">Standard</div><div class="diff-btn-desc">Clear-cut cases. Good for getting started.</div></div>
-        <div style="text-align:right;"><div class="diff-badge" style="background:#0d2010;color:var(--green);border:1px solid var(--green);">STANDARD</div><div class="diff-pts">Always available</div></div>
-      </button>
-      <button class="diff-btn" id="btn-medium" onclick="generateCase('Medium')">
-        <div><div class="diff-btn-name">Medium</div><div class="diff-btn-desc">Conflicting evidence, legal technicalities.</div></div>
-        <div style="text-align:right;"><div class="diff-badge" style="background:#1a1000;color:var(--amber);border:1px solid var(--amber);">MEDIUM</div><div class="diff-pts" id="medium-pts">Unlocks at 100 pts</div></div>
-      </button>
-      <button class="diff-btn" id="btn-expert" onclick="generateCase('Expert')">
-        <div><div class="diff-btn-name">Expert</div><div class="diff-btn-desc">Obscure precedents, buried evidence, no mercy.</div></div>
-        <div style="text-align:right;"><div class="diff-badge" style="background:#1a0a0a;color:var(--red);border:1px solid var(--red);">EXPERT</div><div class="diff-pts" id="expert-pts">Unlocks at 250 pts</div></div>
-      </button>
-      <button class="diff-btn" id="btn-judge-mode" onclick="generateJudgeCase()" style="display:none;border-color:#3a2e00;">
-        <div><div class="diff-btn-name" style="color:var(--gold);">🔨 Judge Mode</div><div class="diff-btn-desc">You sit on the bench. Both sides argue before you.</div></div>
-        <div style="text-align:right;"><div class="diff-badge" style="background:#1a1500;color:var(--gold);border:1px solid var(--gold);">JUDGE</div><div class="diff-pts">Unlocks at 500 pts</div></div>
-      </button>
-      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <div class="settings-label" style="margin-bottom:0.5rem;">📰 Real Case Mode</div>
-        <textarea id="real-case-input" rows="3" placeholder="Paste a news article or real case description — AI will build a playable case from it..." style="margin-bottom:0.5rem;font-size:0.82rem;"></textarea>
-        <button class="btn" id="btn-real" onclick="generateRealCase()" disabled style="font-size:0.85rem;padding:0.6rem;">Build From Real Case →</button>
+  <!-- TAB: PLAY -->
+  <div id="tab-play" class="menu-tab-content active-tab-content">
+  <div class="play-layout">
+    <div class="play-sidebar">
+      <div class="profile-mini">
+        <div class="profile-mini-head">
+          <div class="profile-mini-name">⚖ Lawyer Profile</div>
+          <span id="save-badge" style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;padding:0.15rem 0.38rem;border-radius:3px;background:var(--bg4);border:1px solid var(--border);color:var(--muted);">💾 Auto-Save</span>
+        </div>
+        <div class="stat-row"><span class="stat-label">Score</span><span class="stat-val" id="prof-score" style="color:var(--gold);">0 pts</span></div>
+        <div class="stat-row"><span class="stat-label">Tier</span><span class="stat-val" id="prof-tier" style="color:var(--green);">Standard</span></div>
+        <div class="stat-row"><span class="stat-label">W / L</span><span class="stat-val" id="prof-wl">0 / 0</span></div>
+        <div class="stat-row"><span class="stat-label">Rank</span><span class="stat-val" id="landing-rank" style="color:var(--gold);">👤 Public Defender</span></div>
+        <div class="stat-row"><span class="stat-label">XP</span><span class="stat-val" id="prof-xp" style="color:var(--purple);">0 / 100</span></div>
+        <div class="xp-bar-track" style="margin-top:0.4rem;"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+        <div style="border-top:1px solid var(--border);padding-top:0.55rem;margin-top:0.6rem;">
+          <div class="sidebar-label">Skills</div>
+          <div class="skill-grid" id="skill-grid"></div>
+        </div>
+      </div>
+      <div class="settings-panel">
+        <div class="settings-panel-title">⚙ Settings</div>
+        <select id="sel-jurisdiction" onchange="updateJurHint()">
+          <option value="US">🇺🇸 United States</option><option value="UK">🇬🇧 United Kingdom</option>
+          <option value="EU">🇪🇺 European Union</option><option value="CA">🇨🇦 Canada</option>
+          <option value="AU">🇦🇺 Australia</option><option value="IN">🇮🇳 India</option>
+          <option value="FR">🇫🇷 France</option><option value="DE">🇩🇪 Germany</option>
+          <option value="JP">🇯🇵 Japan</option><option value="SG">🇸🇬 Singapore</option>
+        </select>
+        <div class="hint-text" id="jur-hint">US Federal &amp; State Law</div>
+        <select id="sel-language">
+          <option value="en">🌐 English</option><option value="fr">🇫🇷 French</option>
+          <option value="de">🇩🇪 German</option><option value="es">🇪🇸 Spanish</option>
+          <option value="ja">🇯🇵 Japanese</option><option value="zh">🇨🇳 Chinese</option>
+          <option value="pt">🇧🇷 Portuguese</option><option value="ar">🇸🇦 Arabic</option>
+          <option value="hi">🇮🇳 Hindi</option><option value="nl">🇳🇱 Dutch</option>
+        </select>
+        <select id="sel-opponent">
+          <option value="aggressive">😤 Aggressive Prosecutor</option>
+          <option value="slippery">🦊 Slippery Lawyer</option>
+          <option value="rookie">🎓 Rookie (Gets Lucky)</option>
+          <option value="dirty">😈 Dirty Tricks</option>
+        </select>
+        <select id="sel-timer">
+          <option value="0">⏱ No Timer</option><option value="60">⏱ 60 seconds</option>
+          <option value="90">⏱ 90 seconds</option><option value="120">⏱ 2 minutes</option>
+        </select>
+      </div>
+      <div class="lb-mini">
+        <div class="lb-mini-title">🏆 Top Cases</div>
+        <div id="leaderboard-list"></div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:1.5rem;">
-      <div class="diff-section">
+    <div class="play-main">
+      <div class="play-section">
+        <div class="section-title">⚡ Choose a Case</div>
+        <div class="section-sub">Each case is uniquely AI-generated with evidence, witnesses and a hidden element.</div>
+        <button class="case-btn" id="btn-standard" onclick="generateCase('Standard')">
+          <div class="case-btn-left"><div class="case-btn-name">Standard</div><div class="case-btn-desc">Clear-cut cases. Good for getting started.</div></div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="diff-badge" style="background:#061508;color:var(--green);border:1px solid var(--green);">STANDARD</div>
+            <div class="diff-pts">Always available</div>
+          </div>
+        </button>
+        <button class="case-btn" id="btn-medium" onclick="generateCase('Medium')">
+          <div class="case-btn-left"><div class="case-btn-name">Medium</div><div class="case-btn-desc">Conflicting evidence, legal technicalities.</div></div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="diff-badge" style="background:#0f0900;color:var(--amber);border:1px solid var(--amber);">MEDIUM</div>
+            <div class="diff-pts" id="medium-pts">Unlocks at 100 pts</div>
+          </div>
+        </button>
+        <button class="case-btn" id="btn-expert" onclick="generateCase('Expert')">
+          <div class="case-btn-left"><div class="case-btn-name">Expert</div><div class="case-btn-desc">Obscure precedents, buried evidence, no mercy.</div></div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="diff-badge" style="background:#0f0404;color:var(--red);border:1px solid var(--red);">EXPERT</div>
+            <div class="diff-pts" id="expert-pts">Unlocks at 250 pts</div>
+          </div>
+        </button>
+        <button class="case-btn" id="btn-judge-mode" onclick="generateJudgeCase()" style="display:none;border-color:#3a2e00;">
+          <div class="case-btn-left"><div class="case-btn-name" style="color:var(--gold);">🔨 Judge Mode</div><div class="case-btn-desc">You sit on the bench. Both sides argue before you.</div></div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="diff-badge" style="background:#0f0c00;color:var(--gold);border:1px solid var(--gold);">JUDGE</div>
+            <div class="diff-pts">Unlocks at 500 pts</div>
+          </div>
+        </button>
+      </div>
+      <div class="play-section">
+        <div class="section-title">📰 Real Case Mode</div>
+        <div class="section-sub">Paste a news article and the AI builds a playable case from it.</div>
+        <textarea id="real-case-input" rows="3" placeholder="Paste a news article or case description..." style="margin-bottom:0.5rem;font-size:0.82rem;"></textarea>
+        <button class="btn" id="btn-real" onclick="generateRealCase()" disabled style="font-size:0.85rem;padding:0.58rem;">Build From Real Case →</button>
+      </div>
+      <div class="play-section">
         <div class="section-title">📁 Your Own Case</div>
-        <p class="card-desc" style="margin-bottom:0.8rem;">Describe your scenario. The AI will oppose you and judge impartially.</p>
-        <textarea id="custom-case" rows="4" placeholder="Describe your case, parties, key facts, evidence, and what you're trying to prove..."></textarea>
+        <div class="section-sub">Describe your scenario. AI opposes and judges impartially.</div>
+        <textarea id="custom-case" rows="4" placeholder="Describe your case, parties, key facts..."></textarea>
         <button class="btn" id="btn-custom" onclick="startCustomCase()" disabled>Enter Courtroom →</button>
       </div>
-      <div class="leaderboard-box" style="margin-top:0;">
-        <div class="section-title" style="margin-bottom:0.8rem;">🏆 Leaderboard</div>
-        <div id="leaderboard-list"><div style="color:var(--muted);font-size:0.82rem;">No entries yet. Win cases to appear here.</div></div>
-      </div>
-      <div class="leaderboard-box" style="margin-top:0;" id="judge-mode-box">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-          <div class="section-title">🔨 Judge Mode</div>
-          <div id="judge-lock-badge" style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:4px;background:#1a0a0a;color:var(--red);border:1px solid var(--red);">LOCKED — Need 500 pts</div>
+      <div id="resume-banner-spot"></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- TAB: PROFILE -->
+  <div id="tab-profile" class="menu-tab-content" style="display:none;flex-direction:column;padding:1.5rem 2rem;overflow-y:auto;">
+    <div style="max-width:700px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;width:100%;">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.3rem;">
+        <div style="font-family:serif;color:var(--gold);font-size:1rem;font-weight:700;margin-bottom:0.9rem;">⚖ Lawyer Profile</div>
+        <div style="font-size:0.85rem;">
+          <div style="display:flex;justify-content:space-between;padding:0.32rem 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Score</span><span id="p2-score" style="color:var(--gold-light);font-weight:600;"></span></div>
+          <div style="display:flex;justify-content:space-between;padding:0.32rem 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Tier</span><span id="p2-tier" style="font-weight:700;"></span></div>
+          <div style="display:flex;justify-content:space-between;padding:0.32rem 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">W / L</span><span id="p2-wl" style="font-family:monospace;font-size:0.8rem;"></span></div>
+          <div style="display:flex;justify-content:space-between;padding:0.32rem 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Career</span><span id="p2-rank" style="color:var(--gold);font-size:0.82rem;"></span></div>
+          <div style="display:flex;justify-content:space-between;padding:0.32rem 0;"><span style="color:var(--muted);">Bar</span><span id="p2-bar" style="font-family:monospace;font-size:0.68rem;color:var(--gold);"></span></div>
         </div>
-        <p style="color:var(--muted);font-size:0.78rem;line-height:1.6;margin-bottom:0.8rem;">Unlock at 500 points. You become the Judge — both sides argue before you. Rule on objections, weigh evidence, and deliver the final verdict. Your decisions shape the outcome.</p>
-        <button class="btn" id="btn-judge" onclick="generateJudgeCase()" disabled style="font-size:0.85rem;padding:0.6rem;">⚖ Take the Bench →</button>
+        <div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">
+          <div style="font-family:monospace;font-size:0.6rem;color:var(--muted);margin-bottom:0.3rem;">XP</div>
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="p2-xp-bar" style="width:0%"></div></div>
+          <div id="p2-xp" style="font-family:monospace;font-size:0.62rem;color:var(--purple);margin-top:0.2rem;"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.3rem;">
+          <div style="font-family:serif;color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:0.6rem;">⭐ Skills</div>
+          <div class="skill-grid" id="skill-grid-p2"></div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.3rem;flex:1;">
+          <div style="font-family:serif;color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:0.6rem;">🏛 Career Ladder</div>
+          <div id="p2-career-list" style="display:flex;flex-direction:column;gap:0.3rem;"></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- TAB: LEADERBOARD -->
+  <div id="tab-lb" class="menu-tab-content" style="display:none;flex-direction:column;padding:1.5rem 2rem;overflow-y:auto;">
+    <div style="max-width:600px;margin:0 auto;width:100%;">
+      <div style="font-family:serif;color:var(--gold);font-size:1.1rem;font-weight:700;margin-bottom:0.9rem;">🏆 All-Time Leaderboard</div>
+      <div id="leaderboard-list-full"></div>
+      <div style="margin-top:1rem;text-align:right;">
+        <button onclick="if(confirm('Clear?')){leaderboard=[];try{localStorage.setItem('court_lb','[]');}catch(e){}renderLeaderboard();renderFullLeaderboard();}" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.3rem 0.7rem;border-radius:6px;cursor:pointer;font-family:serif;font-size:0.8rem;">Clear</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- GENERATING SCREEN -->
@@ -691,10 +770,26 @@ function setKey(){
   if(!k)return;apiKey=k;maybeSaveKey();autoLoad();show('screen-landing');updateProfile();updateDiffButtons();checkForSavedTrial();renderLeaderboard();
 }
 window.addEventListener('DOMContentLoaded',function(){
-  autoLoad();loadSavedKey();
-  selectProvider('anthropic');
-  renderSkills();renderLeaderboard();buildObjGrid();buildQuickObjRow();
-  setTimeout(checkForSavedTrial,300);
+  autoLoad();
+  loadSavedKey();
+  loadCaseHistory();
+  loadAiBehaviour();
+  loadMilestones();
+  loadSoundPref();
+  loadReputation();
+  renderSkills();renderLeaderboard();
+  if(typeof buildObjGrid==='function')buildObjGrid();
+  if(typeof buildQuickObjRow==='function')buildQuickObjRow();
+  updateCareerDisplay();updateProfile();updateDiffButtons();
+  if(apiKey){
+    selectProvider(provider||'anthropic');
+    show('screen-landing');
+    setTimeout(checkForSavedTrial,300);
+    showToast('Welcome back! '+cumulativeScore+' pts');
+  } else {
+    selectProvider('anthropic');
+  }
+  setTimeout(updateJurHint,200);
 });
 
 // ══════════════════════════════════════════════════
@@ -2205,6 +2300,94 @@ window.addEventListener('DOMContentLoaded',function(){
   }
   setTimeout(updateJurHint,200);
 });
+
+
+// ════ MENU TAB SYSTEM ════
+function showTab(tabId){
+  document.querySelectorAll('.menu-tab-content').forEach(function(t){t.style.display='none';t.classList.remove('active-tab-content');});
+  document.querySelectorAll('.menu-tab').forEach(function(t){t.classList.remove('active-tab');});
+  var tab=document.getElementById(tabId);
+  if(tab){tab.style.display='flex';tab.classList.add('active-tab-content');}
+  var tabName=tabId.replace('tab-','');
+  var btn=document.getElementById('menu-tab-'+tabName);
+  if(btn)btn.classList.add('active-tab');
+  if(tabId==='tab-profile')updateProfileTab();
+  if(tabId==='tab-lb')renderFullLeaderboard();
+}
+
+function updateProfileTab(){
+  var tier=getTier(cumulativeScore);
+  var rank=getCareerRank();
+  var arch=selectedArchetype&&typeof ARCHETYPES!=='undefined'?ARCHETYPES[selectedArchetype]:null;
+  function el(id,val){var e=document.getElementById(id);if(e)e.textContent=val||'';}
+  el('p2-score',cumulativeScore+' pts');
+  var tierEl=document.getElementById('p2-tier');
+  if(tierEl){tierEl.textContent=tier;tierEl.style.color=tierColor(tier);}
+  el('p2-wl',wins+' / '+losses);
+  el('p2-rank',rank.icon+' '+rank.name);
+  el('p2-bar',barAdmitted?(barScore+'/20 — '+(JURISDICTIONS[barJurisdiction]||{name:'Bar'}).name):'Not taken');
+  el('p2-xp',xp+' / '+(100+getTierNum()*50)+' XP');
+  var xpBar=document.getElementById('p2-xp-bar');
+  if(xpBar)xpBar.style.width=Math.min(100,xp/(100+getTierNum()*50)*100)+'%';
+  var sg=document.getElementById('skill-grid-p2');
+  if(sg){
+    var names={intimidation:'🔥 Intimidation',evidence:'📄 Evidence',procedure:'📋 Procedure',crossExam:'🎯 Cross-Exam'};
+    sg.innerHTML=Object.entries(skills).map(function(kv){
+      return '<div class="skill-pill '+(kv[1]>=5?'maxed':'')+'">'+names[kv[0]]+'<span>'+'★'.repeat(kv[1])+'☆'.repeat(5-kv[1])+'</span></div>';
+    }).join('');
+  }
+  var cl=document.getElementById('p2-career-list');
+  if(cl){
+    cl.innerHTML=CAREER_RANKS.map(function(r){
+      var reached=cumulativeScore>=r.min;
+      return '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;opacity:'+(reached?'1':'0.4')+';">'
+        +'<span>'+(reached?'✓':'○')+'</span>'
+        +'<span style="color:'+(reached?'var(--gold)':'var(--muted)')+';">'+r.icon+' '+r.name+'</span>'
+        +'<span style="font-family:monospace;font-size:0.6rem;color:var(--muted);margin-left:auto;">'+r.min+' pts</span>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+function renderFullLeaderboard(){
+  var el=document.getElementById('leaderboard-list-full');if(!el)return;
+  if(!leaderboard.length){el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;">No entries yet.</div>';return;}
+  var sorted=[...leaderboard].sort(function(a,b){return b.score-a.score;});
+  el.innerHTML=sorted.map(function(e,i){
+    var tc=tierColor(getTier(e.score));
+    return '<div class="lb-row"><div class="lb-rank">'+(i+1)+'</div><div class="lb-name">'+escHtml(e.title||'')+'</div>'
+      +'<div class="lb-score">+'+e.score+'</div>'
+      +'<div class="lb-tier" style="background:'+tc+'22;color:'+tc+';border:1px solid '+tc+'">'+getTier(e.score)+'</div></div>';
+  }).join('');
+}
+
+function toggleVerdictSummary(){
+  var box=document.getElementById('verdict-summary-box');
+  if(!box)return;
+  var visible=box.style.display!=='none';
+  if(!visible){
+    var lines=['Case: '+(currentCase?currentCase.title:'Unknown'),'Type: '+(currentCase?currentCase.type:''),'Role: '+(currentCase?currentCase.yourRole:''),'','Final probability: '+winProb+'%'];
+    if(loopholeFound)lines.push('Hidden element: FOUND');
+    else if(currentCase&&currentCase.hiddenLoophole)lines.push('Hidden element missed: '+currentCase.hiddenLoophole);
+    document.getElementById('verdict-summary-content').innerHTML=lines.map(function(l){return l?'<div>'+escHtml(l)+'</div>':'<br>';}).join('');
+    box.style.display='block';
+  }else{box.style.display='none';}
+}
+
+function downloadVerdictSummary(){
+  var lines=['COURT — CASE VERDICT SUMMARY','','Case: '+(currentCase?currentCase.title:'Unknown'),'Final probability: '+winProb+'%'];
+  messages.forEach(function(m){
+    if(m.role==='user')lines.push('','YOU: '+(m.content||''));
+    if(m.role==='assistant'){
+      if(m.opposing)lines.push('OPPOSING: '+m.opposing);
+      if(m.witness)lines.push('WITNESS: '+m.witness);
+      if(m.judge)lines.push('JUDGE: '+m.judge);
+    }
+  });
+  var blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='verdict_'+Date.now()+'.txt';a.click();
+}
 
 </script>
 
