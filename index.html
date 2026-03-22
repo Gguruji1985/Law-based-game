@@ -339,6 +339,187 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
   .btn-verdict,.btn-verdict-ghost{padding:0.5rem 0.8rem;font-size:0.8rem;}
   .newspaper-box,.ruling-review-box,.score-box{padding:0.65rem 0.75rem;}
 }
+
+/* ═══════════ DYNAMIC POPUPS — all popups ═══════════ */
+/* Base overlay: covers screen, scrollable, centers content */
+.overlay-base{
+  position:fixed;inset:0;z-index:10000;
+  display:none;
+  background:rgba(0,0,0,0.88);
+  align-items:flex-start;
+  justify-content:center;
+  padding:clamp(0.5rem,3vw,2rem);
+  overflow-y:auto;
+}
+.overlay-base.open,
+.overlay-base[style*="display:flex"]{
+  display:flex;
+}
+/* Inner box: fluid, scrollable, never taller than viewport */
+.popup-box{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:clamp(8px,2vw,14px);
+  width:100%;
+  max-width:min(560px,96vw);
+  max-height:calc(100vh -  clamp(1rem,6vw,4rem));
+  overflow-y:auto;
+  margin:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  animation:popupIn 0.22s ease;
+  position:relative;
+}
+@keyframes popupIn{from{opacity:0;transform:scale(0.96) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+/* Wide variant for transcript */
+.popup-box.wide{ max-width:min(720px,96vw); }
+/* Narrow for settlement */
+.popup-box.narrow{ max-width:min(440px,96vw); }
+/* Popup header row */
+.popup-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:clamp(0.8rem,2vw,1.2rem) clamp(0.9rem,2.5vw,1.5rem);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg3);z-index:1;
+  border-radius:inherit inherit 0 0;
+  gap:0.8rem;
+}
+.popup-title{
+  font-family:'Playfair Display',serif;color:var(--gold);
+  font-size:clamp(0.88rem,2.5vw,1.05rem);font-weight:700;
+  flex:1;min-width:0;
+}
+.popup-close{
+  background:transparent;border:1px solid var(--border2);
+  border-radius:5px;color:var(--muted);
+  padding:0.2rem 0.55rem;cursor:pointer;font-size:0.95rem;
+  line-height:1.2;transition:all 0.15s;flex-shrink:0;
+}
+.popup-close:hover{border-color:var(--red);color:var(--red);}
+/* Popup body scrolls */
+.popup-body{
+  padding:clamp(0.9rem,2.5vw,1.4rem);
+  overflow-y:auto;
+}
+/* Popup footer sticky at bottom */
+.popup-footer{
+  padding:clamp(0.6rem,2vw,0.9rem) clamp(0.9rem,2.5vw,1.4rem);
+  border-top:1px solid var(--border);
+  background:var(--bg2);
+  border-radius:0 0 inherit inherit;
+  position:sticky;bottom:0;
+}
+/* Verdict specific */
+.verdict-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:10000;
+  display:none;align-items:flex-start;justify-content:center;
+  padding:clamp(0.5rem,3vw,1.5rem);overflow-y:auto;
+}
+.verdict-overlay.open{display:flex;}
+.verdict-card{
+  background:var(--bg3);
+  border-radius:clamp(10px,2vw,16px);
+  padding:clamp(1.1rem,3vw,2.2rem) clamp(0.9rem,3vw,1.8rem);
+  max-width:min(540px,96vw);
+  width:100%;text-align:center;
+  animation:verdictIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  margin:auto;position:relative;
+}
+@keyframes verdictIn{from{opacity:0;transform:scale(0.82) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.verdict-win-card{border:2px solid var(--green);box-shadow:0 0 50px rgba(34,197,94,0.15);}
+.verdict-loss-card{border:2px solid var(--red);box-shadow:0 0 50px rgba(239,68,68,0.15);}
+.verdict-gavel{font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:0.6rem;animation:gavelDrop 0.5s ease 0.2s both;}
+.verdict-headline{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;margin-bottom:0.3rem;}
+.verdict-sub{color:var(--muted);font-size:clamp(0.75rem,2vw,0.86rem);margin-bottom:0.8rem;}
+.score-val{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,4vw,1.7rem);font-weight:900;color:var(--gold);}
+.verdict-actions{display:flex;gap:0.4rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;}
+.btn-verdict,.btn-verdict-ghost{
+  padding:clamp(0.45rem,1.5vw,0.6rem) clamp(0.8rem,2vw,1.2rem);
+  font-size:clamp(0.78rem,2vw,0.88rem);
+}
+/* Evidence modal box already uses .modal-box — override to be dynamic */
+.modal-box{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:clamp(8px,2vw,14px);
+  width:100%;max-width:min(640px,96vw);
+  max-height:calc(100vh -  clamp(1rem,6vw,4rem));
+  display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  animation:popupIn 0.2s ease;
+  margin:auto;
+}
+.transcript-box{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:clamp(8px,2vw,14px);
+  width:100%;max-width:min(720px,96vw);
+  max-height:calc(100vh -  clamp(1rem,6vw,4rem));
+  display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  animation:popupIn 0.2s ease;
+  margin:auto;
+}
+/* Save modal box */
+.save-modal-box{
+  background:var(--bg3);border:1px solid var(--gold-dim);
+  border-radius:clamp(8px,2vw,14px);
+  width:100%;max-width:min(520px,96vw);
+  max-height:calc(100vh -  clamp(1rem,6vw,4rem));
+  overflow-y:auto;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  animation:popupIn 0.22s ease;
+  margin:auto;
+}
+/* Exam card */
+.exam-card{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:clamp(8px,2vw,14px);
+  padding:clamp(1rem,3vw,1.8rem);
+  width:100%;max-width:min(660px,96vw);
+  max-height:calc(100vh -  clamp(1rem,6vw,4rem));
+  overflow-y:auto;
+  box-shadow:0 24px 60px rgba(0,0,0,0.5);
+  margin:auto;
+}
+/* Pre-trial, key card */
+.key-card{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:clamp(8px,2vw,14px);
+  padding:clamp(1.2rem,3vw,2rem);
+  width:100%;max-width:min(500px,96vw);
+  box-shadow:0 24px 60px rgba(0,0,0,0.6);
+}
+/* All overlay backgrounds — normalize inline styles */
+#modal-overlay,#transcript-overlay,#save-overlay,#settlement-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:10000;
+  display:none;align-items:flex-start;justify-content:center;
+  padding:clamp(0.5rem,3vw,1.5rem);overflow-y:auto;
+}
+/* Settlement box */
+#settlement-overlay > div{
+  background:var(--bg3);border:2px solid var(--purple);
+  border-radius:clamp(8px,2vw,14px);
+  width:100%;max-width:min(440px,96vw);
+  padding:clamp(1.2rem,3vw,2rem);
+  text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7);
+  margin:auto;
+}
+/* Bar exam screen scrollable */
+#screen-exam{
+  overflow-y:auto;
+  padding:clamp(1rem,3vw,2rem);
+}
+/* Character screen */
+#screen-character{
+  overflow-y:auto;
+  padding:clamp(1rem,3vw,2rem);
+}
+.archetype-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(200px,45vw),1fr));
+  gap:clamp(0.5rem,2vw,0.9rem);
+  margin-bottom:1rem;
+  width:100%;max-width:min(720px,96vw);
+}
 </style>
 </head>
 <body>
@@ -688,6 +869,7 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
       <button id="sound-toggle" onclick="toggleSound()" class="hdr-btn" style="font-size:0.88rem;">🔊</button>
       <button class="hdr-btn" onclick="saveTrialProgress();autoSave();showToast('Saved!');">💾</button>
       <button class="hdr-btn" onclick="showTranscript()">📋</button>
+      <button class="hdr-btn" onclick="showAiControlsModal()" title="AI Behaviour" style="color:var(--purple);border-color:#4a3a8a;">🤖 AI</button>
       <button class="hdr-btn" onclick="confirmNewCase()" style="color:var(--gold);border-color:var(--gold-dim);">＋ New</button>
       <button class="hdr-btn" onclick="goToLanding()">← Menu</button>
     </div>
@@ -710,7 +892,6 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
           <div class="arg-strength" id="arg-strength-pips"></div>
           <div id="arg-strength-label" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.3rem;">—</div>
         </div>
-      </div>
 
       <!-- Turn Timer -->
       <div class="timer-box" id="timer-box" style="display:none;">
@@ -829,7 +1010,7 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
 </div>
 
 <!-- EVIDENCE MODAL -->
-<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:9000;align-items:center;justify-content:center;padding:2rem;">
+<div id="modal-overlay" style="display:none;">
   <div id="modal-box" style="background:#13121a;border:1px solid #3a3050;border-radius:14px;width:100%;max-width:620px;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 30px 70px rgba(0,0,0,0.8);">
     <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #2a2535;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-shrink:0;">
       <div>
@@ -849,7 +1030,7 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
 </div>
 
 <!-- TRANSCRIPT MODAL -->
-<div id="transcript-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:9000;align-items:center;justify-content:center;padding:2rem;">
+<div id="transcript-overlay" style="display:none;">
   <div style="background:#13121a;border:1px solid #3a3050;border-radius:14px;width:100%;max-width:700px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 30px 70px rgba(0,0,0,0.8);">
     <div class="modal-header">
       <div><div class="modal-title">📋 Trial Transcript</div><div class="modal-doctype" id="transcript-case-name"></div></div>
@@ -928,20 +1109,30 @@ function deliverVerdict(){
 }
 
 window.addEventListener('DOMContentLoaded',function(){
-  autoLoad();
-  loadSoundPref();loadReputation();
-  // If save had API key, skip key screen and go straight to landing
+  // Step 1: load all persisted data
+  autoLoad();          // score, xp, skills, settings
+  loadSavedKey();      // API key -> sets apiKey variable
+  loadCaseHistory();   // prevent repeat cases
+  loadAiBehaviour();   // AI controls
+  loadSoundPref();     // sound on/off
+  loadReputation();    // judge reputation
+
+  // Step 2: decide which screen to show
   if(apiKey){
+    // Has API key — skip key screen, go straight to game
     selectProvider(currentProvider||'anthropic');
     show('screen-landing');
+    renderSkills();renderLeaderboard();buildObjGrid();buildQuickObjRow();
+    updateCareerDisplay();updateProfile();updateDiffButtons();
+    setTimeout(checkForSavedTrial, 300);
+    setTimeout(function(){ if(document.getElementById('sel-jurisdiction')) updateJurHint(); }, 200);
+    showToast('Welcome back! ' + cumulativeScore + ' pts');
   } else {
-    loadSavedKey();
+    // No key — show key screen
     selectProvider('anthropic');
+    renderSkills();renderLeaderboard();
+    updateCareerDisplay();updateProfile();updateDiffButtons();
   }
-  renderSkills();renderLeaderboard();buildObjGrid();buildQuickObjRow();
-  updateCareerDisplay();updateProfile();updateDiffButtons();
-  setTimeout(checkForSavedTrial,300);
-  setTimeout(function(){ if(document.getElementById('sel-jurisdiction')) updateJurHint(); },200);
 });
 
 // ══════════════════════════════════════════════════
@@ -979,33 +1170,145 @@ async function callAI(msgs,systemPrompt,maxTokens){
 // ══════════════════════════════════════════════════
 // CASE GENERATION
 // ══════════════════════════════════════════════════
-function buildCaseGenPrompt(difficulty,realCaseText){
-  const jur=JURISDICTIONS[jurisdiction]||JURISDICTIONS.US;
-  const counts={Standard:3,Medium:4,Expert:5};
-  const n=counts[difficulty]||3;
-  const diffGuide={Standard:"Simple case: petty theft, basic contract dispute, minor negligence.",Medium:"Moderate: workplace injury, securities violation, medical negligence, IP dispute.",Expert:"Complex: corporate fraud, constitutional rights, multi-party, obscure precedents."};
-  const realCasePart=realCaseText?`\nBASE THIS CASE ON: "${realCaseText.slice(0,500)}"\nAdapt it into a playable scenario while changing names and making it original.\n`:'';
-  const diffGuide2={Standard:"Simple case: petty theft, basic contract dispute, minor negligence.",Medium:"Moderate: workplace injury, securities violation, medical negligence, IP dispute.",Expert:"Complex: corporate fraud, constitutional rights, multi-party, obscure precedents."};
-  const n2=({Standard:3,Medium:4,Expert:5})[difficulty]||3;
-  const jur2=JURISDICTIONS[jurisdiction]||JURISDICTIONS.US;
-  const realPart=realCaseText?('\nBASE THIS CASE ON: "'+realCaseText.slice(0,400)+'"\nAdapt it into a playable scenario.\n'):'';
-  return 'You generate legal cases for a courtroom simulation game. Output ONLY raw JSON, no markdown, no fences.\n\n'
-    +'DIFFICULTY: '+difficulty+' — '+diffGuide2[difficulty]+'\n'
-    +'JURISDICTION: '+jur2.name+' ('+jur2.law+')\n'
-    +'EVIDENCE COUNT: exactly '+n2+' docs'
-    +realPart+'\n\n'
-    +'RULES:\n'
-    +'- All strings: NO unescaped quotes, NO literal newlines\n'
-    +'- evidence content: max 100 words, realistic, specific names/dates/numbers\n'
-    +'- summary: max 35 words. hint: max 15 words. hiddenLoophole: max 50 words\n'
-    +'- Plant one subtle hidden element (timestamp discrepancy, mislabeled exhibit, missed procedure)\n'
-    +'- Include 2-4 witness names in a "witnesses" array\n'
-    +'- Standard: 3 docs. Medium: 4 docs. Expert: 5 docs.\n'
-    +'- IMPORTANT: Generate a COMPLETELY DIFFERENT case every time. Vary the crime type, setting, parties, facts and legal issues dramatically. Never repeat a case you may have generated before. Use this random seed to ensure variety: '+Math.floor(Math.random()*999999)+'\n'
-    +'- Case types to pick from randomly: Murder, Assault, Drug trafficking, Embezzlement, Medical malpractice, Contract breach, Wrongful termination, Defamation, IP theft, Tax fraud, Cybercrime, Insurance fraud, Domestic violence, Robbery, Money laundering, Negligence, Discrimination, Environmental violation, Securities fraud, Kidnapping\n\n'
-    +'OUTPUT THIS EXACT JSON (start with { end with }, nothing else):\n'
-    +'{"title":"Case title","type":"e.g. Criminal - Fraud","difficulty":"'+difficulty+'","summary":"Brief summary","yourRole":"e.g. Defense Attorney","witnesses":["Name 1","Name 2"],"evidenceDocs":[{"title":"Doc title","type":"Doc type","content":"Document text max 100 words","hint":"Short tip"}],"hiddenLoophole":"What it is and where it hides"}';
+
+// ── CASE HISTORY — prevents repeating cases ──
+var caseHistory = []; // stores {type, title, parties} of past cases
+var CASE_TYPE_POOL = [
+  // Criminal
+  'Criminal — Armed Robbery','Criminal — Murder','Criminal — Drug Trafficking',
+  'Criminal — Assault','Criminal — Domestic Violence','Criminal — Kidnapping',
+  'Criminal — Money Laundering','Criminal — Cybercrime','Criminal — Arson',
+  'Criminal — Manslaughter','Criminal — Identity Theft','Criminal — Stalking',
+  // Civil
+  'Civil — Medical Malpractice','Civil — Wrongful Termination','Civil — Contract Breach',
+  'Civil — Personal Injury','Civil — Defamation','Civil — Negligence',
+  'Civil — Product Liability','Civil — Property Dispute',
+  // Corporate / White collar
+  'Corporate — Securities Fraud','Corporate — Embezzlement','Corporate — IP Theft',
+  'Corporate — Insurance Fraud','Corporate — Tax Evasion','Corporate — Antitrust',
+  'Corporate — Environmental Violation','Corporate — Whistleblower',
+  // Specialist
+  'Immigration — Asylum Appeal','Family — Child Custody','Family — Divorce Settlement',
+  'Constitutional — Civil Rights','Constitutional — Free Speech','Administrative — Police Misconduct',
+  'Military — Court Martial','International — War Crimes','Juvenile — Delinquency'
+];
+
+function pickCaseType(difficulty){
+  // Pick a type not used in last 5 cases
+  var recentTypes = caseHistory.slice(-5).map(function(c){return c.type;});
+  // Filter out recently used
+  var available = CASE_TYPE_POOL.filter(function(t){ return recentTypes.indexOf(t)===-1; });
+  // Further filter by difficulty
+  var diffFilter = {
+    Standard: ['Criminal — Armed Robbery','Criminal — Assault','Criminal — Drug Trafficking',
+      'Criminal — Domestic Violence','Criminal — Stalking','Criminal — Arson',
+      'Civil — Personal Injury','Civil — Contract Breach','Civil — Negligence',
+      'Civil — Property Dispute','Criminal — Identity Theft'],
+    Medium: ['Criminal — Murder','Criminal — Cybercrime','Criminal — Money Laundering',
+      'Civil — Medical Malpractice','Civil — Wrongful Termination','Civil — Defamation',
+      'Civil — Product Liability','Corporate — Insurance Fraud','Corporate — Embezzlement',
+      'Family — Child Custody','Family — Divorce Settlement','Administrative — Police Misconduct'],
+    Expert: ['Criminal — Kidnapping','Criminal — Manslaughter','Corporate — Securities Fraud',
+      'Corporate — IP Theft','Corporate — Tax Evasion','Corporate — Antitrust',
+      'Corporate — Environmental Violation','Corporate — Whistleblower','Constitutional — Civil Rights',
+      'Constitutional — Free Speech','Immigration — Asylum Appeal','Military — Court Martial',
+      'International — War Crimes','Juvenile — Delinquency']
+  };
+  var preferred = (diffFilter[difficulty]||CASE_TYPE_POOL).filter(function(t){
+    return recentTypes.indexOf(t)===-1;
+  });
+  var pool = preferred.length > 0 ? preferred : available.length > 0 ? available : CASE_TYPE_POOL;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
+
+function addToCaseHistory(caseData){
+  if(!caseData) return;
+  caseHistory.push({
+    type: caseData.type||'',
+    title: caseData.title||'',
+    summary: (caseData.summary||'').slice(0,60)
+  });
+  if(caseHistory.length>10) caseHistory=caseHistory.slice(-10);
+  // Persist in localStorage
+  try{ localStorage.setItem('court_case_history', JSON.stringify(caseHistory)); }catch(e){}
+}
+
+function loadCaseHistory(){
+  try{
+    var raw=localStorage.getItem('court_case_history');
+    if(raw) caseHistory=JSON.parse(raw);
+  }catch(e){}
+}
+
+function buildCaseGenPrompt(difficulty,realCaseText){
+  var jur=JURISDICTIONS[jurisdiction]||JURISDICTIONS.US;
+  var n=({Standard:3,Medium:4,Expert:5})[difficulty]||3;
+  var caseType=pickCaseType(difficulty);
+
+  // Build list of previously seen titles/summaries to explicitly exclude
+  var recentCases=caseHistory.slice(-8);
+  var avoidStr=recentCases.length>0
+    ? '\nAVOID THESE — already played:\n'+recentCases.map(function(c,i){
+        return (i+1)+'. '+c.type+': '+c.title+(c.summary?' ('+c.summary+')':'');
+      }).join('\n')+'\n'
+    : '';
+
+  // Parties seed — ensure totally different people every time
+  var firstNames=['Alex','Jordan','Morgan','Taylor','Casey','Riley','Avery','Quinn',
+    'Blake','Drew','Skyler','Reese','Cameron','Sage','Finley','Harley','Emerson',
+    'Dakota','Kai','Remy','Nico','Ash','Baylor','Cruz','Eden'];
+  var lastNames=['Chen','Reyes','Okafor','Nakamura','Petrov','Hassan','Mbeki','Kowalski',
+    'Okonkwo','Bergstrom','Nazari','Delacroix','Yamamoto','Andersen','Patel','Santos',
+    'Volkov','Kim','Osei','Ferreira','Larsson','Ibrahim','Novak','Tremblay','Castillo'];
+  var pick=function(arr){return arr[Math.floor(Math.random()*arr.length)];};
+  var defendant=pick(firstNames)+' '+pick(lastNames);
+  var plaintiff=pick(firstNames)+' '+pick(lastNames);
+  while(plaintiff===defendant) plaintiff=pick(firstNames)+' '+pick(lastNames);
+
+  // Settings seed for true variety
+  var settings=['downtown office building','rural hospital','tech startup headquarters',
+    'luxury yacht','university campus','government ministry','remote mining site',
+    'busy international airport','suburban courthouse','city police precinct',
+    'five-star restaurant','pharmaceutical lab','offshore oil rig','community center',
+    'investment bank trading floor'];
+  var timePeriods=['last week','three years ago','during the 2023 recession',
+    'over the past 18 months','on the night of November 3rd','during the audit'];
+  var setting=pick(settings);
+  var timePeriod=pick(timePeriods);
+
+  var realPart=realCaseText
+    ?'\nBASE THIS CASE ON THE FOLLOWING REAL STORY (change all names, make it original):\n"'
+      +realCaseText.slice(0,400)+'"\n'
+    :'';
+
+  return 'You generate unique legal cases for a courtroom simulation. Output ONLY raw JSON.\n\n'
+    +'CASE TYPE (you MUST use this): '+caseType+'\n'
+    +'DIFFICULTY: '+difficulty+'\n'
+    +'JURISDICTION: '+jur.name+' ('+jur.law+')\n'
+    +'EVIDENCE COUNT: exactly '+n+' documents\n'
+    +'DEFENDANT NAME: '+defendant+'\n'
+    +'PLAINTIFF/VICTIM: '+plaintiff+'\n'
+    +'SETTING: '+setting+'\n'
+    +'TIME PERIOD: '+timePeriod+'\n'
+    +avoidStr
+    +realPart
+    +'\nSTRICT RULES:\n'
+    +'1. Use EXACTLY the case type, defendant name, and setting provided above\n'
+    +'2. Do NOT generate petty theft, shoplifting or simple theft — those are overused\n'
+    +'3. Create specific, realistic evidence with real dates/amounts/names\n'
+    +'4. All strings: no unescaped quotes, no literal newlines\n'
+    +'5. summary: max 35 words. hint: max 15 words. hiddenLoophole: max 50 words\n'
+    +'6. Plant ONE subtle hidden element (timing error, procedural mistake, mislabeled doc)\n'
+    +'7. Include 2-3 witnesses with full names\n'
+    +'8. yourRole: randomly assign Defense Attorney OR Prosecutor (vary it!)\n'
+    +'\nOUTPUT EXACTLY THIS JSON (nothing before { or after }):\n'
+    +'{"title":"Specific case title with names","type":"'+caseType+'","difficulty":"'+difficulty
+    +'","summary":"35-word summary","yourRole":"Defense Attorney or Prosecutor",'
+    +'"witnesses":["Full Name 1","Full Name 2"],'
+    +'"evidenceDocs":[{"title":"Doc title","type":"Doc type","content":"Up to 100 words of specific realistic content","hint":"15-word tip"}],'
+    +'"hiddenLoophole":"Specific hidden element description"}';
+}
+
 
 function sanitiseJSON(str){
   let out='',inStr=false,esc=false;
@@ -1061,6 +1364,7 @@ async function generateCase(difficulty){
     const caseData=parseJSON(raw);
     caseData.evidence=caseData.evidenceDocs.map(d=>d.title);
     if(!caseData.witnesses)caseData.witnesses=[];
+    addToCaseHistory(caseData);// track to prevent repeats
     // Offer pre-trial phase
     currentCase=caseData;
     startPreTrial(caseData);
@@ -1092,6 +1396,7 @@ async function generateRealCase(){
     const caseData=parseJSON(raw);
     caseData.evidence=caseData.evidenceDocs.map(d=>d.title);
     if(!caseData.witnesses)caseData.witnesses=[];
+    addToCaseHistory(caseData);// track to prevent repeats
     // Offer pre-trial phase
     currentCase=caseData;
     startPreTrial(caseData);
@@ -1461,6 +1766,7 @@ function openEvidenceModal(idx){
   document.getElementById('modal-hint').textContent=doc.hint?'💡 '+doc.hint:'';
   const overlay=document.getElementById('modal-overlay');
   overlay.style.display='flex';
+  overlay.style.alignItems='flex-start';
 }
 function closeEvidenceModal(){
   document.getElementById('modal-overlay').style.display='none';
@@ -1498,7 +1804,9 @@ function showTranscript(){
     }
     return'';
   }).join('');
-  document.getElementById('transcript-overlay').style.display='flex';
+  var tov=document.getElementById('transcript-overlay');
+  tov.style.display='flex';
+  tov.style.alignItems='flex-start';
 }
 function showTranscriptFromVerdict(){document.getElementById('verdict-overlay').classList.remove('open');showTranscript();}
 function closeTranscript(e){if(!e||e.target===document.getElementById('transcript-overlay'))document.getElementById('transcript-overlay').style.display='none';}
@@ -1530,20 +1838,23 @@ function renderMessages(){
       let html='<div class="msg-assistant">';
       if(m.argStrength)html+=`<div style="margin-bottom:0.3rem;"><span class="arg-tag ${m.argStrength.toLowerCase()}">${m.argStrength.toUpperCase()}</span></div>`;
       if(m.opposing){
-        // When witness is on stand, opposing is a brief reaction — style it differently
-        var oppLabel = m.witness ? '⚔ COUNSEL (reaction)' : '⚔ OPPOSING COUNSEL';
+        // Opposing counsel reacts first (objection or comment)
+        var oppLabel = m.witness ? '⚔ COUNSEL (objection)' : '⚔ OPPOSING COUNSEL';
         html+=`<div class="msg-opposing"><div class="msg-role-label" style="color:var(--red)">${oppLabel}</div>${escHtml(m.opposing)}</div>`;
+      }
+      if(m.judge && m.witness){
+        // Judge rules on objection BEFORE witness testifies (correct procedure)
+        html+=`<div class="msg-judge"><div class="msg-role-label" style="color:var(--green)">🔨 JUDGE (ruling on objection)</div>${escHtml(m.judge)}</div>`;
       }
       if(m.twist)html+=`<div class="msg-twist"><div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--amber);font-weight:700;margin-bottom:0.3rem;">⚡ CASE TWIST</div>${escHtml(m.twist)}</div>`;
       if(m.witness){
-        // Witness always speaks before judge
+        // Witness testifies after judge rules on any objection
         html+=`<div class="msg-witness"><div class="msg-role-label" style="color:var(--purple)">🧑‍⚖️ WITNESS — ${escHtml(m.witnessName||'')}</div>${escHtml(m.witness)}</div>`;
       }
       if(m.contradiction)html+=`<div class="contradiction-flash">⚠ CONTRADICTION DETECTED — ${escHtml(m.contradiction)}</div>`;
-      if(m.judge){
-        // Judge ALWAYS speaks last — after witness testimony if present
-        var judgePrefix = m.witness ? '🔨 JUDGE (after testimony)' : '🔨 JUDGE';
-        html+=`<div class="msg-judge"><div class="msg-role-label" style="color:var(--green)">${judgePrefix}</div>${escHtml(m.judge)}</div>`;
+      if(m.judge && !m.witness){
+        // No witness — judge rules on legal argument normally
+        html+=`<div class="msg-judge"><div class="msg-role-label" style="color:var(--green)">🔨 JUDGE</div>${escHtml(m.judge)}</div>`;
       }      html+='</div>';el.innerHTML+=html;
     }else if(m.role==='error'){
       el.innerHTML+=`<div class="msg-error">${escHtml(m.content)}</div>`;
@@ -1567,16 +1878,19 @@ function buildSystemPrompt(){
   return 'You are a multi-role legal AI in a courtroom simulation. Language: '+langName2+'. Jurisdiction: '+jur3.name+' ('+jur3.law+').\n\n'
     +'ROLE 1 — OPPOSING COUNSEL: '+(oppGuide2[opponentStyle]||oppGuide2.aggressive)+' Cite real '+jur3.name+' laws.\n\n'
     +'ROLE 2 — THE JUDGE: Apply '+jur3.name+' law strictly. Rule on objections. Give WIN PROBABILITY (0-100%) based on legal merit. Be harsh. Update every exchange.\n'
-    +'COURTROOM ORDER — STRICT RULE: When user calls or questions a witness:\n'
-    +'  1. opposing_counsel = brief 1-sentence reaction to the question (objection, or short comment)\n'
-    +'  2. witness_testimony = witness answers IN CHARACTER, specific and realistic\n'
-    +'  3. judge_ruling = judge speaks LAST — reacts to what the witness JUST SAID (sustain/overrule any objection, comment on credibility, note the testimony). NEVER let judge speak before witness.\n'
-    +'When NO witness is on stand: witness_testimony=null, witness_name=null. Judge rules on legal arguments normally.\n\n'
+    +'COURTROOM ORDER — STRICT RULE:\n'
+    +'When user questions a witness, respond in this EXACT order:\n'
+    +'  1. opposing_counsel = one-sentence objection or reaction to the question\n'
+    +'  2. judge_ruling = judge rules on the objection IMMEDIATELY (Sustained/Overruled) BEFORE witness speaks\n'
+    +'  3. witness_testimony = witness then answers the question IN CHARACTER\n'
+    +'This mirrors real courtroom procedure: counsel objects → judge rules → witness answers.\n'
+    +'When NO witness: witness_testimony=null, judge rules on legal arguments normally.\n\n'
     +'ROLE 3 — WITNESSES: If the user calls or questions a witness by name, respond IN CHARACTER as that specific person. Be specific, evasive if appropriate, and realistic. Witnesses can contradict themselves — if so set contradiction_detected. When no witness is being questioned set witness_testimony to null.\n\n'
     +'ROLE 4 — CASE TWIST: After turn 4, if dramatically appropriate, introduce one surprise twist. Set case_twist to short description. Only fire ONCE per trial.\n\n'
     +'ROLE 5 — ARGUMENT RATER: Rate last argument as "strong", "weak", or "backfired".\n\n'
     +'JURY: Update jury_shifts as array of 6 numbers (-10 to +10) per juror.\n\n'
     +'HIDDEN ELEMENT: Never reveal it. Never factor into probability unless user explicitly argued it. If they do: set loophole_found true.\n\n'
+    +buildAiBehaviourInstructions()
     +'ALWAYS respond in this exact JSON (no markdown):\n'
     +'{"opposing_counsel":"...","judge_ruling":"...","witness_testimony":null,"witness_name":null,"contradiction_detected":null,"case_twist":null,"argument_strength":"weak","jury_shifts":[0,0,0,0,0,0],"win_probability":45,"probability_reason":"...","loophole_found":false}';
 }
@@ -1832,6 +2146,7 @@ async function generateJudgeCase(){
     const caseData=parseJSON(raw);
     caseData.evidence=caseData.evidenceDocs.map(d=>d.title);
     if(!caseData.witnesses)caseData.witnesses=[];
+    addToCaseHistory(caseData);// track to prevent repeats
     judgeCase=caseData;judgeMessages=[];judgeBalance=50;judgeLoading=false;
     renderJudgeScreen();show('screen-judge');
   }catch(err){
@@ -2079,7 +2394,13 @@ function applySaveData(data){
 function autoSave(){
   try{
     localStorage.setItem(SAVE_KEY, JSON.stringify(buildSaveData()));
+    localStorage.setItem('court_case_history',JSON.stringify(caseHistory.slice(-10)));
   }catch(e){ console.warn('autoSave failed:', e); }
+  // Also persist API key if remember is checked
+  try{
+    var cb = document.getElementById('save-key-cb');
+    if(apiKey && cb && cb.checked) localStorage.setItem(API_KEY_K, apiKey);
+  }catch(e){}
   updateSaveBadge('saved');
 }
 
@@ -2099,8 +2420,9 @@ function updateSaveBadge(state){
     badge.style.color = 'var(--green)';
     clearTimeout(badge._t);
     badge._t = setTimeout(function(){
-      badge.textContent = '💾 Auto-Save';
-      badge.style.color = '';
+      var keyStored = !!localStorage.getItem(API_KEY_K);
+      badge.textContent = keyStored ? '💾 Auto-Save ✓' : '💾 Auto-Save';
+      badge.style.color = keyStored ? 'var(--green)' : '';
     }, 2000);
   }
 }
@@ -2390,15 +2712,25 @@ function loadSavedKey(){
     var k = localStorage.getItem(API_KEY_K);
     var inp = document.getElementById('api-key-input');
     var cb  = document.getElementById('save-key-cb');
-    if(k && inp){ inp.value = k; if(cb) cb.checked = true; }
+    if(k){
+      apiKey = k; // set the variable, not just the input field
+      if(inp) inp.value = k;
+      if(cb) cb.checked = true;
+    }
   }catch(e){}
 }
 
 function maybeSaveKey(){
   try{
     var cb = document.getElementById('save-key-cb');
-    if(cb && cb.checked && apiKey) localStorage.setItem(API_KEY_K, apiKey);
-    else localStorage.removeItem(API_KEY_K);
+    if(apiKey){
+      // Always save if "remember" is checked; remove if unchecked
+      if(cb && cb.checked){
+        localStorage.setItem(API_KEY_K, apiKey);
+      } else if(!cb || !cb.checked){
+        localStorage.removeItem(API_KEY_K);
+      }
+    }
   }catch(e){}
 }
 
@@ -2472,7 +2804,9 @@ function offerSettlement(){
     +'Your current win probability: '+winProb+'%. '
     +'They offer to settle for '+settlementPts+' points — guaranteed. '
     +'Accept and end the trial now, or reject and fight for a full win (or risk losing everything).';
-  document.getElementById('settlement-overlay').style.display='flex';
+  var sov=document.getElementById('settlement-overlay');
+  sov.style.display='flex';
+  sov.style.alignItems='flex-start';
 }
 function acceptSettlement(){
   document.getElementById('settlement-overlay').style.display='none';
@@ -3509,10 +3843,121 @@ function confirmNewCase(){
   }
   goToLanding();
 }
+
+// ══════════════════════════════════════════════════
+// AI BEHAVIOUR CONTROLS
+// ══════════════════════════════════════════════════
+var aiBehaviour = {
+  opponentReply: true,       // does opponent react at all
+  opponentAggression: 'high', // 'low','medium','high'
+  witnessReply: true,        // does witness answer or refuse
+  witnessHonesty: 'honest',  // 'honest','evasive','lying'
+  judgeStrictness: 'fair',   // 'lenient','fair','strict'
+  judgeReply: true           // does judge comment every turn
+};
+
+function loadAiBehaviour(){
+  try{
+    var raw = localStorage.getItem('court_ai_behaviour');
+    if(raw) aiBehaviour = Object.assign(aiBehaviour, JSON.parse(raw));
+  }catch(e){}
+}
+
+function saveAiBehaviour(){
+  try{ localStorage.setItem('court_ai_behaviour', JSON.stringify(aiBehaviour)); }catch(e){}
+}
+
+function updateAiBehaviour(key, value){
+  aiBehaviour[key] = value === 'true' ? true : value === 'false' ? false : value;
+  saveAiBehaviour();
+  showToast('AI behaviour updated');
+}
+
+function showAiControlsModal(){
+  var el = document.getElementById('ai-controls-overlay');
+  if(el){ el.style.display='flex'; el.style.alignItems='flex-start'; refreshAiControls(); }
+}
+function closeAiControlsModal(){
+  var el = document.getElementById('ai-controls-overlay');
+  if(el) el.style.display='none';
+}
+
+function refreshAiControls(){
+  // Update all select values from current aiBehaviour
+  var map = {
+    'aic-opp-reply': aiBehaviour.opponentReply?'true':'false',
+    'aic-opp-aggr': aiBehaviour.opponentAggression,
+    'aic-wit-reply': aiBehaviour.witnessReply?'true':'false',
+    'aic-wit-hon': aiBehaviour.witnessHonesty,
+    'aic-judge-strict': aiBehaviour.judgeStrictness,
+    'aic-judge-reply': aiBehaviour.judgeReply?'true':'false'
+  };
+  Object.keys(map).forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.value = map[id];
+  });
+}
+
+function buildAiBehaviourInstructions(){
+  var lines = [];
+
+  // Opponent behaviour
+  if(!aiBehaviour.opponentReply){
+    lines.push('OPPONENT: Set opposing_counsel to null. Opponent stays silent this turn.');
+  } else {
+    var aggrMap = {
+      low: 'Opponent is polite and concise. One short sentence only. No strong objections.',
+      medium: 'Opponent is firm but professional. Makes clear arguments.',
+      high: 'Opponent is aggressive, combative, and challenges everything forcefully.'
+    };
+    lines.push('OPPONENT STYLE: '+( aggrMap[aiBehaviour.opponentAggression]||aggrMap.high));
+  }
+
+  // Witness behaviour
+  if(!aiBehaviour.witnessReply){
+    lines.push('WITNESS: Set witness_testimony to "I refuse to answer that question." Witness invokes their right to silence.');
+  } else {
+    var honMap = {
+      honest: 'Witness answers truthfully and directly to the best of their knowledge.',
+      evasive: 'Witness is nervous and evasive — answers vaguely, dodges specifics, claims not to recall details.',
+      lying: 'Witness is ACTIVELY LYING to protect themselves or another party. Testimony subtly contradicts known facts. Set contradiction_detected if the lie is caught.'
+    };
+    lines.push('WITNESS BEHAVIOUR: '+(honMap[aiBehaviour.witnessHonesty]||honMap.honest));
+  }
+
+  // Judge behaviour
+  if(!aiBehaviour.judgeReply){
+    lines.push('JUDGE: Set judge_ruling to null. Judge observes silently this turn and does not comment.');
+  } else {
+    var judgeMap = {
+      lenient: 'Judge is lenient and defence-friendly. Gives benefit of doubt. Rarely sustains prosecution objections.',
+      fair: 'Judge applies the law fairly and impartially to both sides.',
+      strict: 'Judge is stern and impatient. Frequently interjects, demands precise legal arguments, and punishes sloppy lawyering with lower win probability.'
+    };
+    lines.push('JUDGE DEMEANOUR: '+(judgeMap[aiBehaviour.judgeStrictness]||judgeMap.fair));
+  }
+
+  return lines.length > 0 ? '\nAI BEHAVIOUR CONTROLS (follow these exactly):\n'+lines.join('\n')+'\n' : '';
+}
+
+function resetAiBehaviour(){
+  aiBehaviour = {opponentReply:true,opponentAggression:'high',witnessReply:true,
+    witnessHonesty:'honest',judgeStrictness:'fair',judgeReply:true};
+  saveAiBehaviour();
+  refreshAiControls();
+  showToast('AI behaviour reset to defaults');
+}
+// Show lying hint when lying is selected
+document.addEventListener('change', function(e){
+  if(e.target && e.target.id==='aic-wit-hon'){
+    var hint = document.getElementById('aic-lying-hint');
+    if(hint) hint.style.display = e.target.value==='lying' ? 'block' : 'none';
+  }
+});
 </script>
 
 <!-- SAVE MODAL -->
-<div id="save-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
+<div id="save-overlay" style="display:none;">
   <div class="save-modal-box" style="max-width:520px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
       <div style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.05rem;font-weight:700;">💾 Save &amp; Load</div>
@@ -3562,7 +4007,7 @@ function confirmNewCase(){
 </div>
 
 <!-- SETTLEMENT MODAL -->
-<div id="settlement-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
+<div id="settlement-overlay" style="display:none;">
   <div style="background:var(--bg3);border:1px solid var(--purple);border-radius:14px;width:100%;max-width:440px;padding:2rem;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.8);">
     <div style="font-size:2rem;margin-bottom:0.5rem;">🤝</div>
     <div style="font-family:'Playfair Display',serif;color:var(--purple);font-size:1.15rem;font-weight:700;margin-bottom:0.4rem;">Settlement Offer</div>
@@ -3742,5 +4187,99 @@ function confirmNewCase(){
   </div>
 </div>
 
+
+<!-- AI BEHAVIOUR CONTROLS MODAL -->
+<div id="ai-controls-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:10000;align-items:flex-start;justify-content:center;padding:clamp(0.5rem,3vw,1.5rem);overflow-y:auto;">
+  <div style="background:var(--bg3);border:2px solid var(--purple);border-radius:clamp(8px,2vw,14px);width:100%;max-width:min(520px,96vw);margin:auto;box-shadow:0 24px 60px rgba(0,0,0,0.7);animation:popupIn 0.22s ease;overflow-y:auto;max-height:calc(100vh - clamp(1rem,6vw,4rem));">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg3);z-index:1;border-radius:inherit inherit 0 0;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;color:var(--purple);font-size:1rem;font-weight:700;">🤖 AI Behaviour Controls</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.15rem;">Control how each AI character acts in court</div>
+      </div>
+      <button onclick="closeAiControlsModal()" class="popup-close">✕</button>
+    </div>
+    <!-- Body -->
+    <div style="padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1rem;">
+
+      <!-- OPPOSING COUNSEL -->
+      <div style="background:var(--bg2);border:1px solid #2d1010;border-left:3px solid var(--red);border-radius:8px;padding:0.9rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--red);font-weight:700;margin-bottom:0.6rem;">⚔ OPPOSING COUNSEL</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Replies this turn</span>
+            <select id="aic-opp-reply" onchange="updateAiBehaviour('opponentReply',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="true">✅ Yes — reacts</option>
+              <option value="false">🔇 Silent — no response</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Aggression level</span>
+            <select id="aic-opp-aggr" onchange="updateAiBehaviour('opponentAggression',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="low">😌 Low — polite, brief</option>
+              <option value="medium">😤 Medium — firm</option>
+              <option value="high">🔥 High — aggressive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- WITNESS -->
+      <div style="background:var(--bg2);border:1px solid #221a42;border-left:3px solid var(--purple);border-radius:8px;padding:0.9rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--purple);font-weight:700;margin-bottom:0.6rem;">🧑‍⚖️ WITNESS</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Will answer</span>
+            <select id="aic-wit-reply" onchange="updateAiBehaviour('witnessReply',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="true">✅ Yes — testifies</option>
+              <option value="false">🤐 Refuses to answer</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Honesty</span>
+            <select id="aic-wit-hon" onchange="updateAiBehaviour('witnessHonesty',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="honest">😇 Honest — tells the truth</option>
+              <option value="evasive">😬 Evasive — vague, dodgy</option>
+              <option value="lying">🤥 Lying — actively deceiving</option>
+            </select>
+          </div>
+          <div id="aic-lying-hint" style="display:none;font-size:0.7rem;color:var(--amber);line-height:1.4;padding:0.3rem 0.4rem;background:#0f0900;border-radius:4px;">
+            ⚠ Lying witness will subtly contradict known facts. Catch the contradiction to expose them and boost your win probability.
+          </div>
+        </div>
+      </div>
+
+      <!-- JUDGE -->
+      <div style="background:var(--bg2);border:1px solid #0f2214;border-left:3px solid var(--green);border-radius:8px;padding:0.9rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--green);font-weight:700;margin-bottom:0.6rem;">🔨 JUDGE</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Comments this turn</span>
+            <select id="aic-judge-reply" onchange="updateAiBehaviour('judgeReply',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="true">✅ Yes — rules each turn</option>
+              <option value="false">🤫 Silent — observes only</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+            <span style="font-size:0.8rem;color:var(--muted);">Strictness</span>
+            <select id="aic-judge-strict" onchange="updateAiBehaviour('judgeStrictness',this.value)" style="width:auto;margin:0;font-size:0.78rem;padding:0.3rem 0.6rem;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);">
+              <option value="lenient">😊 Lenient — defence-friendly</option>
+              <option value="fair">⚖ Fair — impartial</option>
+              <option value="strict">😠 Strict — punishes sloppiness</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info note -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:0.65rem 0.8rem;font-size:0.73rem;color:var(--muted);line-height:1.5;">
+        ℹ Changes apply from the <strong style="color:var(--text);">next message</strong> onwards. Settings persist between sessions. Reset by setting all to defaults.
+      </div>
+
+      <!-- Reset button -->
+      <button onclick="resetAiBehaviour()" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:0.45rem;color:var(--muted);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.68rem;width:100%;">↺ Reset to Defaults</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
