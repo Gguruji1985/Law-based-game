@@ -38,7 +38,7 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
 .provider-tab.active{background:#1a1530;border-color:var(--gold);color:var(--gold);font-weight:600;}
 
 /* ── KEY SCREEN ── */
-#screen-key{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 50% 20%,#1a1530 0%,var(--bg) 60%);}
+/* old screen-key removed */
 
 /* ── LANDING ── */
 /* old screen-landing rule removed */
@@ -369,6 +369,13 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
         <div id="judge-balance-label" style="font-size:0.7rem;color:var(--muted);margin-top:0.4rem;text-align:center;">Evenly balanced</div>
       </div>
       <div id="judge-sidebar-evidence"></div>
+      <div id="media-box" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.75rem;">
+        <div style="font-family:monospace;font-size:0.65rem;color:var(--amber);font-weight:700;margin-bottom:0.3rem;">📺 Public Opinion</div>
+        <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:0.3rem;">
+          <div id="media-bar" style="width:50%;height:100%;background:var(--amber);border-radius:4px;transition:width 0.5s;"></div>
+        </div>
+        <div id="media-label" style="font-size:0.68rem;color:var(--amber);">Mixed opinion</div>
+      </div>
       <div class="tips-box">
         <div class="tips-title">⚖ Judge Tips</div>
         <div class="tips-text">· Sustain or overrule objections<br>· Ask witnesses questions directly<br>· Dismiss weak arguments<br>· Call for more evidence<br>· Deliver your verdict when ready</div>
@@ -642,11 +649,14 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
       <div class="court-title" id="court-title">⚖ Case</div>
       <div class="court-sub" id="court-sub"></div>
     </div>
-    <div class="header-btns">
-      <div class="pts-badge" id="hdr-pts">0 pts</div>
-      <div class="pts-badge" id="hdr-xp" style="color:var(--purple);">XP: 0</div>
-      <button class="btn-ghost" onclick="showTranscript()" style="font-size:0.75rem;">📋 Transcript</button>
-      <button class="btn-ghost" onclick="goToLanding()">← Menu</button>
+    <div style="display:flex;align-items:center;gap:0.4rem;flex-shrink:0;">
+      <div class="hdr-badge" id="hdr-pts">0 pts</div>
+      <div class="hdr-badge" id="hdr-xp" style="color:var(--purple);">XP: 0</div>
+      <button id="sound-toggle" onclick="toggleSound()" class="hdr-btn" style="font-size:0.88rem;">🔊</button>
+      <button class="hdr-btn" onclick="saveTrialProgress();autoSave();showToast('Saved!');">💾</button>
+      <button class="hdr-btn" onclick="showTranscript()">📋</button>
+      <button class="hdr-btn" onclick="confirmNewCase()" style="color:var(--gold);border-color:var(--gold-dim);">＋ New</button>
+      <button class="hdr-btn" onclick="goToLanding()">← Menu</button>
     </div>
   </div>
   <div class="court-body">
@@ -710,6 +720,11 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
         <div id="sidebar-jur-law" style="font-size:0.65rem;color:#4a4540;margin-top:0.2rem;line-height:1.4;"></div>
       </div>
 
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.65rem 0.75rem;">
+        <div style="font-family:monospace;font-size:0.6rem;color:var(--gold);font-weight:700;margin-bottom:0.2rem;">🏛 Career</div>
+        <div id="career-rank" style="font-size:0.82rem;color:var(--text);font-weight:600;">👤 Public Defender</div>
+        <div id="career-next" style="font-size:0.62rem;color:var(--muted);margin-top:0.12rem;"></div>
+      </div>
       <!-- Tips -->
       <div class="tips-box">
         <div class="tips-title">⚠ Tips</div>
@@ -757,6 +772,11 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
       <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--purple);font-weight:700;margin-bottom:0.5rem;">🧠 AI LEGAL REVIEW</div>
       <div id="ruling-review-content" style="font-size:0.82rem;color:var(--muted2);line-height:1.7;font-style:italic;">Analysing your performance...</div>
       <div id="ruling-review-score" style="margin-top:0.6rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;"></div>
+    </div>
+    <div id="trial-stats-box" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1.1rem;margin-top:0.8rem;text-align:left;"></div>
+    <div id="verdict-summary-box" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1.1rem;margin-bottom:0.8rem;text-align:left;max-height:200px;overflow-y:auto;">
+      <div style="font-family:monospace;font-size:0.6rem;color:var(--gold);font-weight:700;margin-bottom:0.4rem;">CASE SUMMARY</div>
+      <div id="verdict-summary-content" style="font-size:0.8rem;color:var(--muted2);line-height:1.7;"></div>
     </div>
     <div class="verdict-actions">
       <button class="btn-verdict" onclick="goToLanding()">New Case</button>
@@ -1144,7 +1164,7 @@ function updateDiffButtons(){
 function goToLanding(){stopTimer();show('screen-landing');updateProfile();updateDiffButtons();renderLeaderboard();}
 document.getElementById('sel-jurisdiction').addEventListener('change',function(){jurisdiction=this.value;document.getElementById('jur-hint').textContent=JUR_HINTS[this.value]||'';});
 document.getElementById('sel-language').addEventListener('change',function(){language=this.value;});
-document.getElementById('sel-opponent').addEventListener('change',function(){opponentStyle=this.value;document.getElementById('opponent-hint').textContent=OPPONENT_HINTS[this.value]||'';});
+document.getElementById('sel-opponent').addEventListener('change',function(){opponentStyle=this.value;/* opponent-hint removed */});
 document.getElementById('custom-case').addEventListener('input',function(){document.getElementById('btn-custom').disabled=!this.value.trim();});
 document.getElementById('real-case-input').addEventListener('input',function(){document.getElementById('btn-real').disabled=!this.value.trim();});
 
@@ -1619,12 +1639,8 @@ async function generateRulingReview(mode, win, transcriptText){
 let judgeCase=null, judgeMessages=[], judgeBalance=50, judgeLoading=false;
 
 function updateJudgeButtons(){
-  const unlocked=cumulativeScore>=500;
-  document.getElementById('btn-judge').disabled=!unlocked;
-  const badge=document.getElementById('judge-lock-badge');
-  if(unlocked){
-    badge.textContent='UNLOCKED';badge.style.background='#0d2010';badge.style.color='var(--green)';badge.style.border='1px solid var(--green)';
-  }
+  var jb=document.getElementById('btn-judge-mode');
+  if(jb) jb.style.display=cumulativeScore>=500?'flex':'none';
 }
 
 async function generateJudgeCase(){
@@ -2381,31 +2397,8 @@ function getReputationBonus(){return 0;}
 function updateCareerDisplay(){var rank=getCareerRank();var el=document.getElementById('career-rank');if(el)el.textContent=rank.icon+' '+rank.name;var next=CAREER_RANKS.filter(function(r){return r.min>cumulativeScore;})[0];var nextEl=document.getElementById('career-next');if(nextEl)nextEl.textContent=next?'Next: '+next.name+' ('+next.min+' pts)':'Max rank reached';}
 
 // ════ DOMContentLoaded ════
-window.addEventListener('DOMContentLoaded',function(){
-  autoLoad();
-  loadSavedKey();
-  loadCaseHistory();
-  loadAiBehaviour();
-  loadMilestones();
-  loadSoundPref();
-  loadReputation();
-  renderSkills();
-  renderLeaderboard();
-  if(typeof buildObjGrid==='function')buildObjGrid();
-  if(typeof buildQuickObjRow==='function')buildQuickObjRow();
-  updateCareerDisplay();
-  updateProfile();
-  updateDiffButtons();
-  if(apiKey){
-    selectProvider(provider||'anthropic');
-    show('screen-landing');
-    setTimeout(checkForSavedTrial,300);
-    showToast('Welcome back! '+cumulativeScore+' pts');
-  } else {
-    selectProvider('anthropic');
-  }
-  setTimeout(updateJurHint,200);
-});
+// duplicate DOMContentLoaded removed
+;
 
 
 // ════ MENU TAB SYSTEM ════
