@@ -2389,6 +2389,76 @@ function downloadVerdictSummary(){
   a.download='verdict_'+Date.now()+'.txt';a.click();
 }
 
+
+// ── MODAL API KEY CONTROLS ──
+function selectProviderModal(p){
+  provider = p;
+  // Update modal buttons
+  document.querySelectorAll('.modal-prov-btn').forEach(function(b){
+    b.style.borderColor = 'var(--border2)';
+    b.style.color = 'var(--muted2)';
+    b.style.background = 'var(--bg3)';
+  });
+  var active = document.getElementById('mprov-'+p);
+  if(active){
+    active.style.borderColor = 'var(--gold)';
+    active.style.color = 'var(--gold)';
+    active.style.background = '#1a1500';
+  }
+  // Also update the main key screen if visible
+  selectProvider(p);
+  showToast('Provider: '+PROVIDERS[p].name);
+}
+
+function changeApiKey(){
+  var inp = document.getElementById('modal-api-key-input');
+  if(!inp || !inp.value.trim()){ showToast('Enter an API key first'); return; }
+  apiKey = inp.value.trim();
+  inp.value = '';
+  maybeSaveKey();
+  showToast('API key updated!');
+}
+
+function forgetKeyAndLogout(){
+  if(!confirm('This will forget your API key and return to the login screen. Your progress is saved.')) return;
+  apiKey = '';
+  try{ localStorage.removeItem('court_api_key'); }catch(e){}
+  closeSaveModal();
+  // Uncheck remember box
+  var cb = document.getElementById('save-key-cb');
+  if(cb) cb.checked = false;
+  // Go to key screen
+  show('screen-key');
+  // Pre-fill fields if possible
+  selectProvider(provider||'anthropic');
+  showToast('Logged out — enter a new key to continue');
+}
+
+// Sync provider buttons when save modal opens
+var _origShowSaveModal = showSaveModal;
+showSaveModal = function(){
+  _origShowSaveModal();
+  // Sync provider buttons
+  setTimeout(function(){
+    document.querySelectorAll('.modal-prov-btn').forEach(function(b){
+      b.style.borderColor = 'var(--border2)';
+      b.style.color = 'var(--muted2)';
+      b.style.background = 'var(--bg3)';
+    });
+    var active = document.getElementById('mprov-'+(provider||'anthropic'));
+    if(active){
+      active.style.borderColor = 'var(--gold)';
+      active.style.color = 'var(--gold)';
+      active.style.background = '#1a1500';
+    }
+    // Show current key hint
+    var inp = document.getElementById('modal-api-key-input');
+    if(inp && apiKey) inp.placeholder = 'Current: '+apiKey.slice(0,8)+'... (enter to change)';
+    // Sync remember checkbox
+    var cb = document.getElementById('save-key-cb');
+    if(cb) cb.checked = !!localStorage.getItem('court_api_key');
+  }, 50);
+};
 </script>
 
 <!-- CHARACTER SELECT SCREEN -->
@@ -2515,32 +2585,66 @@ function downloadVerdictSummary(){
 </div>
 
 <!-- SAVE MODAL -->
-<div id="save-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1.5rem;">
-  <div style="background:var(--bg3);border:1px solid var(--gold);border-radius:14px;width:100%;max-width:480px;padding:2rem;box-shadow:0 30px 70px rgba(0,0,0,0.8);">
-    <div style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;">💾 Save Progress</div>
-    <p style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin-bottom:1.1rem;">Your score, XP and skills auto-save after every case. Export a file to back up or move to another device.</p>
-    <div style="display:flex;flex-direction:column;gap:0.7rem;margin-bottom:1rem;">
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.8rem;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:var(--green);font-weight:700;margin-bottom:0.25rem;">✓ Auto-Save Active</div>
-        <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;">Score, XP, skills, leaderboard and trial progress save automatically to your browser.</div>
+<div id="save-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:10000;align-items:flex-start;justify-content:center;padding:clamp(0.5rem,3vw,1.5rem);overflow-y:auto;">
+  <div style="background:var(--bg3);border:1px solid var(--gold-dim);border-radius:clamp(8px,2vw,14px);width:100%;max-width:min(520px,96vw);max-height:calc(100vh - clamp(1rem,6vw,4rem));overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,0.7);margin:auto;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg3);z-index:1;border-radius:inherit inherit 0 0;">
+      <div style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.05rem;font-weight:700;">💾 Save &amp; Settings</div>
+      <button onclick="closeSaveModal()" style="background:transparent;border:1px solid var(--border2);border-radius:5px;color:var(--muted);padding:0.2rem 0.55rem;cursor:pointer;font-size:0.95rem;line-height:1.2;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">✕</button>
+    </div>
+
+    <div style="padding:1.1rem 1.4rem;display:flex;flex-direction:column;gap:0.8rem;">
+
+      <!-- API KEY -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:0.85rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--amber);font-weight:700;margin-bottom:0.6rem;">🔑 API Key &amp; Provider</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;margin-bottom:0.5rem;">
+          <button onclick="selectProviderModal('anthropic')" id="mprov-anthropic" class="modal-prov-btn" style="background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:0.32rem;color:var(--muted2);cursor:pointer;font-family:monospace;font-size:0.66rem;transition:all 0.15s;">🟠 Anthropic</button>
+          <button onclick="selectProviderModal('openai')" id="mprov-openai" class="modal-prov-btn" style="background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:0.32rem;color:var(--muted2);cursor:pointer;font-family:monospace;font-size:0.66rem;transition:all 0.15s;">🟢 OpenAI</button>
+          <button onclick="selectProviderModal('gemini')" id="mprov-gemini" class="modal-prov-btn" style="background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:0.32rem;color:var(--muted2);cursor:pointer;font-family:monospace;font-size:0.66rem;transition:all 0.15s;">🔵 Gemini</button>
+          <button onclick="selectProviderModal('groq')" id="mprov-groq" class="modal-prov-btn" style="background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:0.32rem;color:var(--muted2);cursor:pointer;font-family:monospace;font-size:0.66rem;transition:all 0.15s;">⚡ Groq (Free)</button>
+        </div>
+        <div style="display:flex;gap:0.4rem;margin-bottom:0.4rem;">
+          <input type="password" id="modal-api-key-input" placeholder="Enter new API key to change..." style="flex:1;margin:0;font-size:0.72rem;padding:0.38rem 0.65rem;">
+          <button onclick="changeApiKey()" style="background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:0.38rem 0.8rem;font-family:serif;font-weight:700;cursor:pointer;font-size:0.78rem;white-space:nowrap;">Update</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.4rem;">
+          <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.72rem;color:var(--muted);">
+            <input type="checkbox" id="save-key-cb" style="width:auto;margin:0;"> Remember key in this browser
+          </label>
+          <button onclick="forgetKeyAndLogout()" style="background:transparent;border:1px solid var(--border);border-radius:5px;padding:0.22rem 0.55rem;color:var(--muted);cursor:pointer;font-size:0.68rem;font-family:monospace;white-space:nowrap;">🚪 Log out</button>
+        </div>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.8rem;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:var(--gold);font-weight:700;margin-bottom:0.25rem;">📁 Export / Import</div>
-        <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;margin-bottom:0.6rem;">Download a save file to back up or transfer progress to another device.</div>
-        <div style="display:flex;gap:0.5rem;">
-          <button onclick="exportSave()" style="flex:1;background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:0.5rem;font-family:'Playfair Display',serif;font-weight:700;cursor:pointer;font-size:0.82rem;">⬇ Export</button>
-          <button onclick="document.getElementById('import-file').click()" style="flex:1;background:var(--bg4);color:var(--muted2);border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-family:'Playfair Display',serif;font-weight:700;cursor:pointer;font-size:0.82rem;">⬆ Import</button>
+
+      <!-- AUTO SAVE -->
+      <div style="background:var(--bg2);border:1px solid #0d2010;border-radius:9px;padding:0.85rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--green);font-weight:700;margin-bottom:0.2rem;">✓ Auto-Save — Always Active</div>
+        <div style="font-size:0.76rem;color:var(--muted);line-height:1.5;">Score, XP, skills and trial progress save automatically after every action.</div>
+      </div>
+
+      <!-- SAVE CODE -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:0.85rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--gold);font-weight:700;margin-bottom:0.4rem;">📋 Save Code — Share Across Devices</div>
+        <button id="copy-code-btn" onclick="copySaveCodeToClipboard()" style="width:100%;background:var(--bg4);border:1px solid var(--gold-dim);border-radius:6px;padding:0.45rem;color:var(--gold);cursor:pointer;font-family:monospace;font-size:0.7rem;font-weight:700;margin-bottom:0.4rem;">📋 Generate &amp; Copy Save Code</button>
+        <textarea id="save-code-display" rows="2" placeholder="Your save code appears here..." style="display:block;font-size:0.62rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.45rem;color:var(--muted2);resize:none;font-family:monospace;margin-bottom:0.4rem;"></textarea>
+        <div style="display:flex;gap:0.35rem;">
+          <input type="text" id="load-code-input" placeholder="Paste COURT-XXXX code to load..." style="flex:1;margin:0;font-size:0.7rem;padding:0.38rem 0.6rem;">
+          <button onclick="applyCodeFromInput()" style="background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:0.38rem 0.8rem;font-family:serif;font-weight:700;cursor:pointer;font-size:0.8rem;white-space:nowrap;">Load →</button>
+        </div>
+      </div>
+
+      <!-- FILE BACKUP -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:0.85rem 1rem;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--purple);font-weight:700;margin-bottom:0.4rem;">📁 File Backup</div>
+        <div style="display:flex;gap:0.4rem;">
+          <button onclick="exportSave()" style="flex:1;background:var(--bg4);border:1px solid var(--purple);border-radius:6px;padding:0.42rem;color:var(--purple);cursor:pointer;font-family:serif;font-weight:700;font-size:0.8rem;">⬇ Export</button>
+          <button onclick="document.getElementById('import-file').click()" style="flex:1;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:0.42rem;color:var(--muted2);cursor:pointer;font-family:serif;font-weight:700;font-size:0.8rem;">⬆ Import</button>
           <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importSave(event)">
         </div>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.8rem;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:var(--amber);font-weight:700;margin-bottom:0.25rem;">🔑 Remember API Key</div>
-        <label style="font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
-          <input type="checkbox" id="save-key-cb" style="width:auto;margin:0;"> Save my API key in this browser
-        </label>
-      </div>
+
     </div>
-    <div style="text-align:center;"><button onclick="closeSaveModal()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.4rem 1.2rem;border-radius:6px;cursor:pointer;font-family:'Crimson Text',serif;font-size:0.9rem;">Close</button></div>
   </div>
 </div>
 
