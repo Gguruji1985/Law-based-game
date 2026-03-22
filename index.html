@@ -2122,7 +2122,22 @@ function applyKeyCodeInput(){var inp=document.getElementById('key-code-input');i
 function exportSave(){try{var data=buildSaveData();try{var tr=localStorage.getItem(TRIAL_KEY);if(tr)data._trial=JSON.parse(tr);}catch(e){}var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='court_save_'+new Date().toISOString().slice(0,10)+'.json';a.click();showToast('Save downloaded');}catch(e){showToast('Export failed');}}
 function importSave(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data._trial){try{localStorage.setItem(TRIAL_KEY,JSON.stringify(data._trial));}catch(er){}delete data._trial;}if(applySaveData(data)){autoSave();updateProfile();updateDiffButtons();renderLeaderboard();closeSaveModal&&closeSaveModal();showToast('Imported: '+cumulativeScore+' pts');setTimeout(checkForSavedTrial,400);}else{alert('Invalid save file.');}}catch(err){alert('Error: '+err.message);}e.target.value='';};reader.readAsText(file);}
 function importSaveAtKey(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data._trial){try{localStorage.setItem(TRIAL_KEY,JSON.stringify(data._trial));}catch(er){}delete data._trial;}if(applySaveData(data)){autoSave();var savedKey=localStorage.getItem(API_KEY_K);if(savedKey)apiKey=savedKey;if(apiKey){selectProvider(provider||'anthropic');show('screen-landing');renderSkills();renderLeaderboard();updateProfile();updateDiffButtons();setTimeout(checkForSavedTrial,400);showToast('Welcome back!');}else{var st=document.getElementById('key-import-status');if(st){st.style.display='block';st.textContent='Loaded: '+cumulativeScore+' pts. Enter API key.';}}}else{alert('Invalid save file.');}}catch(err){alert('Error: '+err.message);}e.target.value='';};reader.readAsText(file);}
-function showSaveModal(){var d=document.getElementById('save-code-display');if(d)d.value='';var cb=document.getElementById('save-key-cb');if(cb)cb.checked=!!(localStorage.getItem(API_KEY_K)&&apiKey);var el=document.getElementById('save-overlay');if(el){el.style.display='flex';el.style.alignItems='flex-start';}}
+function showSaveModal(){
+  var d=document.getElementById('save-code-display');if(d)d.value='';
+  var cb=document.getElementById('save-key-cb');if(cb)cb.checked=!!(localStorage.getItem(API_KEY_K)&&apiKey);
+  var el=document.getElementById('save-overlay');
+  if(el){el.style.display='flex';el.style.alignItems='flex-start';}
+  // Sync provider buttons and key hint
+  setTimeout(function(){
+    document.querySelectorAll('.modal-prov-btn').forEach(function(b){
+      b.style.borderColor='var(--border2)';b.style.color='var(--muted2)';b.style.background='var(--bg3)';
+    });
+    var active=document.getElementById('mprov-'+(provider||'anthropic'));
+    if(active){active.style.borderColor='var(--gold)';active.style.color='var(--gold)';active.style.background='#1a1500';}
+    var inp=document.getElementById('modal-api-key-input');
+    if(inp&&apiKey)inp.placeholder='Current: '+apiKey.slice(0,8)+'... (enter new to change)';
+  },50);
+}
 function closeSaveModal(){var el=document.getElementById('save-overlay');if(el)el.style.display='none';}
 function loadSavedKey(){
   try{
@@ -2434,31 +2449,8 @@ function forgetKeyAndLogout(){
   showToast('Logged out — enter a new key to continue');
 }
 
-// Sync provider buttons when save modal opens
-var _origShowSaveModal = showSaveModal;
-showSaveModal = function(){
-  _origShowSaveModal();
-  // Sync provider buttons
-  setTimeout(function(){
-    document.querySelectorAll('.modal-prov-btn').forEach(function(b){
-      b.style.borderColor = 'var(--border2)';
-      b.style.color = 'var(--muted2)';
-      b.style.background = 'var(--bg3)';
-    });
-    var active = document.getElementById('mprov-'+(provider||'anthropic'));
-    if(active){
-      active.style.borderColor = 'var(--gold)';
-      active.style.color = 'var(--gold)';
-      active.style.background = '#1a1500';
-    }
-    // Show current key hint
-    var inp = document.getElementById('modal-api-key-input');
-    if(inp && apiKey) inp.placeholder = 'Current: '+apiKey.slice(0,8)+'... (enter to change)';
-    // Sync remember checkbox
-    var cb = document.getElementById('save-key-cb');
-    if(cb) cb.checked = !!localStorage.getItem('court_api_key');
-  }, 50);
-};
+// provider sync handled inside showSaveModal directly
+
 </script>
 
 <!-- CHARACTER SELECT SCREEN -->
