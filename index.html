@@ -476,6 +476,7 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
       <button onclick="showTab('tab-profile')" id="menu-tab-profile" class="menu-tab">👤 Profile</button>
       <button onclick="showTab('tab-lb')" id="menu-tab-lb" class="menu-tab">🏆 Leaderboard</button>
       <button onclick="showSaveModal()" class="menu-tab">💾 Save</button>
+      <button onclick="showSaveModal();setTimeout(function(){var el=document.getElementById('modal-api-key-input');if(el)el.focus();},100)" class="menu-tab" style="color:var(--amber);border-color:var(--amber)20;">🔑 API Key</button>
     </div>
   </div>
 
