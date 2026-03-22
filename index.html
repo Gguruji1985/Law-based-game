@@ -503,19 +503,85 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
       <div class="settings-panel">
         <div class="settings-panel-title">⚙ Settings</div>
         <select id="sel-jurisdiction" onchange="updateJurHint()">
-          <option value="US">🇺🇸 United States</option><option value="UK">🇬🇧 United Kingdom</option>
-          <option value="EU">🇪🇺 European Union</option><option value="CA">🇨🇦 Canada</option>
-          <option value="AU">🇦🇺 Australia</option><option value="IN">🇮🇳 India</option>
-          <option value="FR">🇫🇷 France</option><option value="DE">🇩🇪 Germany</option>
-          <option value="JP">🇯🇵 Japan</option><option value="SG">🇸🇬 Singapore</option>
+          <optgroup label="Americas">
+            <option value="US">🇺🇸 United States</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="BR">🇧🇷 Brazil</option>
+            <option value="MX">🇲🇽 Mexico</option>
+            <option value="AR">🇦🇷 Argentina</option>
+          </optgroup>
+          <optgroup label="Europe">
+            <option value="UK">🇬🇧 United Kingdom</option>
+            <option value="EU">🇪🇺 European Union</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="CH">🇨🇭 Switzerland</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="RU">🇷🇺 Russia</option>
+            <option value="TR">🇹🇷 Turkey</option>
+          </optgroup>
+          <optgroup label="Asia-Pacific">
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="CN">🇨🇳 China</option>
+            <option value="IN">🇮🇳 India</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="NZ">🇳🇿 New Zealand</option>
+            <option value="PK">🇵🇰 Pakistan</option>
+          </optgroup>
+          <optgroup label="Africa & Middle East">
+            <option value="ZA">🇿🇦 South Africa</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="EG">🇪🇬 Egypt</option>
+            <option value="SA">🇸🇦 Saudi Arabia</option>
+          </optgroup>
         </select>
         <div class="hint-text" id="jur-hint">US Federal &amp; State Law</div>
         <select id="sel-language">
-          <option value="en">🌐 English</option><option value="fr">🇫🇷 French</option>
-          <option value="de">🇩🇪 German</option><option value="es">🇪🇸 Spanish</option>
-          <option value="ja">🇯🇵 Japanese</option><option value="zh">🇨🇳 Chinese</option>
-          <option value="pt">🇧🇷 Portuguese</option><option value="ar">🇸🇦 Arabic</option>
-          <option value="hi">🇮🇳 Hindi</option><option value="nl">🇳🇱 Dutch</option>
+          <optgroup label="Most Common">
+            <option value="en">🌐 English</option>
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+            <option value="pt">🇧🇷 Portuguese</option>
+            <option value="zh">🇨🇳 Chinese</option>
+            <option value="ar">🇸🇦 Arabic</option>
+            <option value="hi">🇮🇳 Hindi</option>
+            <option value="ru">🇷🇺 Russian</option>
+          </optgroup>
+          <optgroup label="Asian">
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="ko">🇰🇷 Korean</option>
+            <option value="id">🇮🇩 Indonesian</option>
+            <option value="vi">🇻🇳 Vietnamese</option>
+            <option value="th">🇹🇭 Thai</option>
+            <option value="bn">🇧🇩 Bengali</option>
+            <option value="ur">🇵🇰 Urdu</option>
+            <option value="fa">🇮🇷 Farsi</option>
+          </optgroup>
+          <optgroup label="European">
+            <option value="nl">🇳🇱 Dutch</option>
+            <option value="pl">🇵🇱 Polish</option>
+            <option value="sv">🇸🇪 Swedish</option>
+            <option value="ro">🇷🇴 Romanian</option>
+            <option value="cs">🇨🇿 Czech</option>
+            <option value="hu">🇭🇺 Hungarian</option>
+            <option value="el">🇬🇷 Greek</option>
+            <option value="uk">🇺🇦 Ukrainian</option>
+            <option value="no">🇳🇴 Norwegian</option>
+            <option value="tr">🇹🇷 Turkish</option>
+          </optgroup>
+          <optgroup label="Other">
+            <option value="he">🇮🇱 Hebrew</option>
+            <option value="sw">🇰🇪 Swahili</option>
+          </optgroup>
         </select>
         <select id="sel-opponent">
           <option value="aggressive">😤 Aggressive Prosecutor</option>
@@ -825,9 +891,79 @@ textarea{resize:vertical;font-family:'Crimson Text',serif;font-size:0.9rem;line-
 // ══════════════════════════════════════════════════
 // CONSTANTS
 // ══════════════════════════════════════════════════
-const JURISDICTIONS={US:{name:"United States",flag:"🇺🇸",law:"US Federal & State Common Law, UCC, Constitutional Law"},UK:{name:"United Kingdom",flag:"🇬🇧",law:"English Common Law, UK Statutes, Human Rights Act"},EU:{name:"European Union",flag:"🇪🇺",law:"EU Civil Law, EU Directives, ECHR"},CA:{name:"Canada",flag:"🇨🇦",law:"Canadian Common Law, Charter of Rights, Quebec Civil Code"},AU:{name:"Australia",flag:"🇦🇺",law:"Australian Common Law, Federal & State legislation"},IN:{name:"India",flag:"🇮🇳",law:"Indian Penal Code, Indian Contract Act, Constitution"},FR:{name:"France",flag:"🇫🇷",law:"French Civil Code (Code civil), Code pénal"},DE:{name:"Germany",flag:"🇩🇪",law:"German BGB Civil Code, StGB Criminal Code, Grundgesetz"},JP:{name:"Japan",flag:"🇯🇵",law:"Japanese Civil Code, Criminal Code, Code of Civil Procedure"},SG:{name:"Singapore",flag:"🇸🇬",law:"Singapore Common Law, Penal Code, Evidence Act"}};
-const LANGUAGE_NAMES={en:"English",fr:"French",de:"German",es:"Spanish",ja:"Japanese",zh:"Chinese",pt:"Portuguese",ar:"Arabic",hi:"Hindi",nl:"Dutch"};
-const JUR_HINTS={US:"US Federal & State Common Law, UCC, Constitutional Law",UK:"English Common Law, UK Statutes, Human Rights Act",EU:"EU Civil Law, EU Directives, ECHR",CA:"Canadian Common Law, Charter of Rights, Quebec Civil Code",AU:"Australian Common Law, Federal & State legislation",IN:"Indian Penal Code, Indian Contract Act, Constitution",FR:"French Civil Code (Code civil), Code pénal",DE:"German BGB Civil Code, StGB Criminal Code, Grundgesetz",JP:"Japanese Civil Code, Criminal Code, Code of Civil Procedure",SG:"Singapore Common Law, Penal Code, Evidence Act"};
+const JURISDICTIONS={
+  US:{name:"United States",flag:"🇺🇸",law:"US Federal & State Common Law, UCC, Constitutional Law"},
+  UK:{name:"United Kingdom",flag:"🇬🇧",law:"English Common Law, UK Statutes, Human Rights Act"},
+  EU:{name:"European Union",flag:"🇪🇺",law:"EU Civil Law, EU Directives, ECHR"},
+  CA:{name:"Canada",flag:"🇨🇦",law:"Canadian Common Law, Charter of Rights, Quebec Civil Code"},
+  AU:{name:"Australia",flag:"🇦🇺",law:"Australian Common Law, Federal & State legislation"},
+  IN:{name:"India",flag:"🇮🇳",law:"Indian Penal Code, Indian Contract Act, Constitution"},
+  FR:{name:"France",flag:"🇫🇷",law:"French Civil Code (Code civil), Code pénal"},
+  DE:{name:"Germany",flag:"🇩🇪",law:"German BGB Civil Code, StGB Criminal Code, Grundgesetz"},
+  JP:{name:"Japan",flag:"🇯🇵",law:"Japanese Civil Code, Criminal Code, Code of Civil Procedure"},
+  SG:{name:"Singapore",flag:"🇸🇬",law:"Singapore Common Law, Penal Code, Evidence Act"},
+  IT:{name:"Italy",flag:"🇮🇹",law:"Italian Civil Code (Codice civile), Codice penale, Constitution"},
+  ES:{name:"Spain",flag:"🇪🇸",law:"Spanish Civil Code (Código Civil), Código Penal, Constitution"},
+  BR:{name:"Brazil",flag:"🇧🇷",law:"Brazilian Civil Code, Código Penal, Federal Constitution 1988"},
+  MX:{name:"Mexico",flag:"🇲🇽",law:"Mexican Civil Code, Código Penal Federal, Constitución Política"},
+  ZA:{name:"South Africa",flag:"🇿🇦",law:"South African Common Law, Constitution, Criminal Procedure Act"},
+  RU:{name:"Russia",flag:"🇷🇺",law:"Russian Civil Code, Criminal Code of Russia, Constitution"},
+  CN:{name:"China",flag:"🇨🇳",law:"Chinese Civil Code, Criminal Law of PRC, Constitution"},
+  KR:{name:"South Korea",flag:"🇰🇷",law:"Korean Civil Act, Criminal Act, Constitution of Korea"},
+  TR:{name:"Turkey",flag:"🇹🇷",law:"Turkish Civil Code, Turkish Penal Code, Constitution"},
+  NL:{name:"Netherlands",flag:"🇳🇱",law:"Dutch Civil Code (BW), Wetboek van Strafrecht, Grondwet"},
+  SE:{name:"Sweden",flag:"🇸🇪",law:"Swedish Civil Code, Brottsbalken (Criminal Code), Constitution"},
+  CH:{name:"Switzerland",flag:"🇨🇭",law:"Swiss Civil Code (ZGB), Swiss Criminal Code (StGB)"},
+  AR:{name:"Argentina",flag:"🇦🇷",law:"Argentine Civil & Commercial Code, Código Penal, Constitution"},
+  NG:{name:"Nigeria",flag:"🇳🇬",law:"Nigerian Common Law, Criminal Code Act, Constitution 1999"},
+  PK:{name:"Pakistan",flag:"🇵🇰",law:"Pakistani Common Law, Pakistan Penal Code, Constitution"},
+  EG:{name:"Egypt",flag:"🇪🇬",law:"Egyptian Civil Code, Penal Code, Constitution 2014"},
+  SA:{name:"Saudi Arabia",flag:"🇸🇦",law:"Islamic Law (Sharia), Royal Decrees, Basic Law"},
+  NZ:{name:"New Zealand",flag:"🇳🇿",law:"NZ Common Law, Crimes Act, Bill of Rights Act"},
+  PT:{name:"Portugal",flag:"🇵🇹",law:"Portuguese Civil Code, Código Penal, Constitution 1976"},
+  PL:{name:"Poland",flag:"🇵🇱",law:"Polish Civil Code, Kodeks karny, Constitution 1997"}
+};
+const LANGUAGE_NAMES={
+  en:"English",fr:"French",de:"German",es:"Spanish",it:"Italian",
+  ja:"Japanese",zh:"Chinese",pt:"Portuguese",ar:"Arabic",hi:"Hindi",
+  nl:"Dutch",ru:"Russian",ko:"Korean",tr:"Turkish",pl:"Polish",
+  sv:"Swedish",ro:"Romanian",cs:"Czech",hu:"Hungarian",
+  id:"Indonesian",vi:"Vietnamese",th:"Thai",ur:"Urdu",
+  he:"Hebrew",fa:"Farsi",el:"Greek",uk:"Ukrainian",
+  bn:"Bengali",sw:"Swahili",no:"Norwegian"
+};
+const JUR_HINTS={
+  US:"US Federal & State Common Law, UCC, Constitutional Law",
+  UK:"English Common Law, UK Statutes, Human Rights Act",
+  EU:"EU Civil Law, EU Directives, ECHR",
+  CA:"Canadian Common Law, Charter of Rights, Quebec Civil Code",
+  AU:"Australian Common Law, Federal & State legislation",
+  IN:"Indian Penal Code, Indian Contract Act, Constitution",
+  FR:"French Civil Code (Code civil), Code pénal",
+  DE:"German BGB Civil Code, StGB Criminal Code, Grundgesetz",
+  JP:"Japanese Civil Code, Criminal Code, Code of Civil Procedure",
+  SG:"Singapore Common Law, Penal Code, Evidence Act",
+  IT:"Italian Civil Code (Codice civile), Codice penale, Constitution",
+  ES:"Spanish Civil Code (Código Civil), Código Penal, Constitution",
+  BR:"Brazilian Civil Code, Código Penal, Federal Constitution 1988",
+  MX:"Mexican Civil Code, Código Penal Federal, Constitución Política",
+  ZA:"South African Common Law, Constitution, Criminal Procedure Act",
+  RU:"Russian Civil Code, Criminal Code of Russia, Constitution",
+  CN:"Chinese Civil Code, Criminal Law of PRC, Constitution",
+  KR:"Korean Civil Act, Criminal Act, Constitution of Korea",
+  TR:"Turkish Civil Code, Turkish Penal Code, Constitution",
+  NL:"Dutch Civil Code (BW), Wetboek van Strafrecht, Grondwet",
+  SE:"Swedish Civil Code, Brottsbalken (Criminal Code), Constitution",
+  CH:"Swiss Civil Code (ZGB), Swiss Criminal Code (StGB)",
+  AR:"Argentine Civil & Commercial Code, Código Penal, Constitution",
+  NG:"Nigerian Common Law, Criminal Code Act, Constitution 1999",
+  PK:"Pakistani Common Law, Pakistan Penal Code, Constitution",
+  EG:"Egyptian Civil Code, Penal Code, Constitution 2014",
+  SA:"Islamic Law (Sharia), Royal Decrees, Basic Law",
+  NZ:"NZ Common Law, Crimes Act, Bill of Rights Act",
+  PT:"Portuguese Civil Code, Código Penal, Constitution 1976",
+  PL:"Polish Civil Code, Kodeks karny, Constitution 1997"
+};
 const OPPONENT_HINTS={aggressive:"Goes for the throat — no mercy, maximum pressure",slippery:"Uses technicalities, misdirection, and clever legal traps",rookie:"Makes obvious mistakes but occasionally gets lucky with a killer point",dirty:"Files surprise motions, introduces last-minute evidence, tries to sandbag you"};
 const JURORS=[{name:"Chen",face:"👩‍💼",type:"logic"},{name:"Torres",face:"👨‍🏫",type:"emotion"},{name:"Walsh",face:"👩‍⚖️",type:"procedure"},{name:"Patel",face:"👨‍💻",type:"logic"},{name:"Brooks",face:"👩‍🔬",type:"evidence"},{name:"Kim",face:"🧑‍🦱",type:"emotion"}];
 const OBJECTIONS=["Hearsay","Speculation","Leading","Relevance","Badgering","Foundation"];
