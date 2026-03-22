@@ -1,67 +1,68 @@
 # ⚖ COURT — Legal Battle Simulator
 
-A fully AI-powered courtroom simulation game. Argue real legal cases, cross-examine witnesses, find hidden evidence, and outwit opposing counsel.
+**Free AI-powered courtroom battle game — play instantly in your browser.**
 
-## 🎮 Play
+🎮 **Play now:** https://gguruji1985.github.io/Law-based-game/
 
-Open `index.html` in any modern browser. Hosted live at your GitHub Pages URL.
+---
 
-You need an API key from one of:
-- [Anthropic](https://console.anthropic.com) (Claude)
-- [OpenAI](https://platform.openai.com/api-keys) (GPT-4o)
-- [Google Gemini](https://aistudio.google.com/app/apikey) (free tier)
-- [Groq](https://console.groq.com/keys) ⚡ **Free, no credit card**
+## What is COURT?
 
-## ✨ Features
+COURT is a free browser-based legal simulation game powered by real AI. You step into a courtroom and argue cases against an AI opponent — filing motions, cross-examining witnesses, suppressing evidence, and fighting for your verdict.
 
-**Entry**
-- 📜 Bar Exam — 20 AI-generated jurisdiction-specific questions, earn bonus points
-- 🎓 Jump Straight In — Guided tutorial case, learn as you go
+No download needed. No account required. Just bring an API key and start arguing.
 
-**Lawyer Archetypes**
-- 🔥 The Pitbull · 📚 The Scholar · ✨ The Charmer · ⚙️ The Technician
+---
 
-**Gameplay**
-- ⚡ AI-generated unique cases every time (Standard / Medium / Expert)
-- 📰 Real Case Mode — paste a news article, AI builds a playable case
-- 📋 Pre-trial phase — file suppression motions, negotiate pleas
-- 🧑‍⚖️ Witness system — call and cross-examine witnesses
-- ⚡ Contradiction detector — catch witnesses lying
-- 💡 Hint system — get cryptic nudges toward the hidden element
-- 🤝 Settlement offers — take guaranteed points or fight on
-- ⚖ Closing argument phase
-- ⚖ Hung jury / Mistrial system
-- 📺 Media pressure meter (high-profile cases)
-- 🔨 Judge Mode — unlocks at 500 pts, you sit on the bench
+## Features
 
-**Post-verdict**
-- 📋 File an appeal to a higher court
-- ⚖ Argue for lighter sentencing
-- 🔄 Retry the same case
-- 🧠 AI legal review with letter grade
-- 📰 AI-generated newspaper headline
+- ⚖ **AI-Powered Courtroom** — Real AI plays opposing counsel, the judge, and witnesses
+- 🌍 **30+ Jurisdictions** — US, UK, Italy, France, Germany, Japan, Brazil, South Africa and more
+- 🗣 **30+ Languages** — English, Italian, Spanish, French, Arabic, Japanese, Chinese and more
+- 📄 **Evidence System** — Read, cite, and suppress evidence before and during trial
+- 🧑‍⚖️ **Witness Cross-Examination** — Call witnesses by name and question them in character
+- 📜 **Bar Exam Mode** — Pass the bar before entering the courtroom for bonus points
+- 🎓 **Character Archetypes** — Choose your lawyer style: Pitbull, Scholar, Charmer or Technician
+- 🏛 **Career Progression** — Rise from Public Defender to Judge across 8 career ranks
+- 💾 **Save System** — Save codes, file export, browser auto-save
+- 🔨 **Judge Mode** — Sit on the bench and rule on both sides
+- 📰 **Real Case Mode** — Paste a news article and the AI builds a case from it
+- 🎯 **Hidden Elements** — Every case hides a secret legal loophole to find
 
-**Progression**
-- 🏛 Career ladder — Public Defender → Judge (8 ranks)
-- ⭐ XP & skill system (Intimidation, Evidence, Procedure, Cross-Exam)
-- 🏆 Local leaderboard
-- ⚖ Judge reputation system
+---
 
-**Save System**
-- 💾 Auto-saves after every case
-- 📂 Mid-trial saves — resume exactly where you left off
-- 📁 Export/Import save files
+## How to Play
 
-## 🚀 Deploy to GitHub Pages
+1. Open the game in your browser
+2. Enter your API key (Groq is free — get one at console.groq.com)
+3. Choose your jurisdiction and language
+4. Generate a case and start arguing
 
-1. Create a new GitHub repository
-2. Upload `index.html` and `README.md`
-3. Go to Settings → Pages → Source: main branch / root
-4. Your game is live at `https://yourusername.github.io/repo-name`
+---
 
-## 🌐 Other Hosting
+## Supported AI Providers
 
-- **Netlify**: Drag `index.html` to [netlify.com/drop](https://netlify.com/drop)
-- **Vercel**: Same drag-and-drop at [vercel.com/new](https://vercel.com/new)
+| Provider | Cost | Model |
+|---|---|---|
+| ⚡ Groq | **Free** | Llama 3.3 70B |
+| 🟠 Anthropic | Paid | Claude Sonnet 4 |
+| 🟢 OpenAI | Paid | GPT-4o |
+| 🔵 Google Gemini | Free tier | Gemini 1.5 Pro |
 
-No server, no database, no build step required. Pure HTML + JS.
+---
+
+## Tech Stack
+
+- Pure HTML/CSS/JavaScript — single file, no framework, no build step
+- GitHub Pages hosting
+- AI via direct browser API calls
+
+---
+
+## Keywords
+
+legal game, courtroom simulator, law game, AI browser game, free lawyer game, legal battle simulator, courtroom drama game, attorney simulator, judge game, trial game, legal education game, AI courtroom game, argue cases online, free law game, courtroom strategy game
+
+---
+
+*Made with Claude AI. Open source. Free to play.*
